@@ -1,0 +1,17 @@
+@import '~antd/dist/antd.less';
+@import './vars.less';
+
+.ant-menu-item {
+    margin: 0 !important;
+}
+
+.ant-menu-item-selected {
+    &:before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: "";
+        height: 40px;
+        border-left: 3px solid #f9963f;
+    }
+}

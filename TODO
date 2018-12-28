@@ -1,0 +1,14 @@
+TODO
+===
+
+采用iframe方式进行迁移, 需要工作大概包括:
+
+- parent与iframe通信方案
+- iframe鉴权问题. parent内鉴权后, 如何传递给iframe.
+    - cookie
+    - token
+- 路由带参数. 即对同一个URL, 所有人都能看到的页面是一样的
+- 样式问题
+- iframe刷新问题, 即切换路径会重新初始化一次Angular
+- ts在react使用的坑
+    - react-router的param类型
