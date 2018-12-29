@@ -30,7 +30,7 @@ class App extends Component {
             />
             <Content>
               <div className={classNames(style["content-container"])}>
-                <div style={{ height: "200vh" }}>
+                <div>
                   <Route path="/" component={TablePage} />
                   <Route path="/form" component={FormPage} />
                   
