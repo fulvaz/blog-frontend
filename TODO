@@ -1,6 +1,11 @@
 TODO
 ===
 
+框
+- 框 done
+- 路由
+- 例子
+
 采用iframe方式进行迁移, 需要工作大概包括:
 
 - parent与iframe通信方案
@@ -11,4 +16,6 @@ TODO
 - 样式问题
 - iframe刷新问题, 即切换路径会重新初始化一次Angular
 - ts在react使用的坑
-    - react-router的param类型
+    - react-router的param类型 
+- 路由解决方案(页面状态反映在路由中)
+- 项目结构规范

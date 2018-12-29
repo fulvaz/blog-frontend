@@ -1,4 +1,3 @@
-import {} from "antd";
 import { Layout } from "antd";
 import * as React from "react";
 const { Header } = Layout;

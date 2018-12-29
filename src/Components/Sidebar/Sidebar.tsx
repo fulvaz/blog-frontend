@@ -4,20 +4,58 @@ const SubMenu = Menu.SubMenu;
 const { Sider } = Layout;
 import * as classNames from "classnames";
 import style from "./Sidebar.module.less";
+import { IconFont } from "../IconFont/IconFont";
+import { Link } from "react-router-dom";
 
-export class Sidebar extends React.Component {
+export class Sidebar extends React.Component<{
+  title: string | JSX.Element;
+  data: any;
+}> {
   public state: any = {
     collapsed: false
   };
 
-  public props: {
-    title: string | JSX.Element;
-  };
-
   public render() {
-    console.log(style);
-    const { title } = this.props;
+    const { title, data = [] } = this.props;
     const { collapsed } = this.state;
+
+    const menu = (
+      <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+        {data.map(e => {
+          if (e.children && e.children.length !== 0) {
+            return (
+              <SubMenu
+                key={e.id}
+                title={
+                  <span>
+                    <IconFont type={e.icon} />
+                    <span>{e.name}</span>
+                  </span>
+                }
+              >
+                {e.children.map(c => (
+                  <Menu.Item key={c.id}>
+                    <Link to={c.path}>
+                      <span>{c.name}</span>
+                    </Link>
+                  </Menu.Item>
+                ))}
+              </SubMenu>
+            );
+          } else {
+            return (
+              <Menu.Item key={e.id}>
+                <Link to={e.path}>
+                  <IconFont type={e.icon} />
+                  <span>{e.name}</span>
+                </Link>
+              </Menu.Item>
+            );
+          }
+        })}
+      </Menu>
+    );
+
     return (
       <Sider
         collapsible
@@ -28,49 +66,11 @@ export class Sidebar extends React.Component {
       >
         <div className={style.h50}>
           <div className={style["title-head"]}>
-            <i className={classNames("iconfont", style.icon)}>&#xe60e;</i>
+            <IconFont type="icon-logo" className={classNames(style.icon)} />
             <p className="m0 ml10">{collapsed ? "" : title}</p>
           </div>
         </div>
-        <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-          <Menu.Item key="1">
-            <Icon type="pie-chart" />
-            <span>Option 1</span>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Icon type="desktop" />
-            <span>Option 2</span>
-          </Menu.Item>
-          <SubMenu
-            key="sub1"
-            title={
-              <span>
-                <Icon type="user" />
-                <span>User</span>
-              </span>
-            }
-          >
-            <Menu.Item key="3">Tom</Menu.Item>
-            <Menu.Item key="4">Bill</Menu.Item>
-            <Menu.Item key="5">Alex</Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub2"
-            title={
-              <span>
-                <Icon type="team" />
-                <span>Team</span>
-              </span>
-            }
-          >
-            <Menu.Item key="6">Team 1</Menu.Item>
-            <Menu.Item key="8">Team 2</Menu.Item>
-          </SubMenu>
-          <Menu.Item key="9">
-            <Icon type="file" />
-            <span>File</span>
-          </Menu.Item>
-        </Menu>
+        {menu}
       </Sider>
     );
   }
