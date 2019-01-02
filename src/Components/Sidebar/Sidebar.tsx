@@ -5,22 +5,28 @@ const { Sider } = Layout;
 import * as classNames from "classnames";
 import style from "./Sidebar.module.less";
 import { IconFont } from "../IconFont/IconFont";
-import { Link } from "react-router-dom";
+import { connect } from 'dva';
+import { Link } from 'dva/router';
 
+@connect(state => {
+  const {title, data, selectedKeys} = state.sidebar;
+  return {title, data, selectedKeys};
+})
 export class Sidebar extends React.Component<{
-  title: string | JSX.Element;
-  data: any;
+  title?: string | JSX.Element;
+  data?: any;
+  selectedKeys: string[],
 }> {
   public state: any = {
     collapsed: false
   };
 
   public render() {
-    const { title, data = [] } = this.props;
     const { collapsed } = this.state;
+    const {title, data = [], selectedKeys} = this.props;
 
     const menu = (
-      <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+      <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" selectedKeys={selectedKeys}>
         {data.map(e => {
           if (e.children && e.children.length !== 0) {
             return (
@@ -75,7 +81,6 @@ export class Sidebar extends React.Component<{
     );
   }
   public onCollapse = (collapsed: boolean) => {
-    console.log(collapsed);
     this.setState({ collapsed });
   };
 }

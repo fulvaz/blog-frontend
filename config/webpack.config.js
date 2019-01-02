@@ -260,8 +260,7 @@ module.exports = function(webpackEnv) {
       // `web` extension prefixes have been added for better support
       // for React Native Web.
       extensions: paths.moduleFileExtensions
-        .map(ext => `.${ext}`)
-        .filter(ext => useTypeScript || !ext.includes("ts")),
+        .map(ext => `.${ext}`),
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -495,9 +494,9 @@ module.exports = function(webpackEnv) {
         }
       ]
     },
-    resolve: {
-      extensions: [".js", ".jsx", ".tsx"]
-    },
+    // resolve: {
+    //   extensions: [".js", ".jsx", ".tsx", "ts"]
+    // },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
