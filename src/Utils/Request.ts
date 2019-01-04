@@ -1,4 +1,14 @@
 import axios from "axios";
+import {Modal} from 'antd';
+
+const {error} = Modal;
+
+function showErr(content) {
+    error({
+        title: '网络错误',
+        content,
+    });
+}
 
 
 axios.interceptors.request.use(

@@ -32,65 +32,111 @@ ps: `visual code`安装`prettier`插件, 然后格式化(alt+f)即可
 
 ### 项目结构
 
+TODO: 需要验证当前结构是否适合业务开发
+
 ## 开发
 
 npm run start
 
-## 打包
+## 发布
 
-npm run build
+TODO: 发布工具开发中
 
 ## 样式
 
-请务必使用 css module
+请务必使用 css module, 以实现样式封装, 请不要把组件样式放在全局
 
 推荐使用 less 或者 css, 原因是 less 兼容 css 和 scss 的语法, 而且可以避免被 node-sass 折磨. (当前版本暂未移除 sass 依赖, 不排除以后哪天会移除, 推荐使用 less 降低迁移成本)
 
 classname lib
 
-## dva
+## 状态管理dva
 
 和 redux 差不多, 使用这个而不是 redux 的原因是 dva 帮我们封装了大量繁琐的 redux api, 平滑了学习曲线, 可以快速上手写业务.
 
-ps: dva 本质是对 redux, react-router, react 的"封装", 去掉了大量繁琐的内容, 然后把 redux 和 react-router 的 api 直接暴露出来, 对 react 修改的部分也极少. 如果你需要深入理解 react 生态, 还是要自己去学习一下 redux 和 react0router 的.
+ps: dva 本质是对 redux, react-router, react 的"封装", 然后把 redux 和 react-router 的 api 直接暴露出来, 对 react 修改的部分也极少. 如果你需要深入理解 react 生态, 还是要自己去学习一下 redux 和 react-router 的.
 
-### 定义状态
+### 定义一个model
 
-见dva文档
+见dva文档(dva上手很快, 请花一点时间看一下文档)
 
-### 使用状态管理
+### 如何在组件中使用这些状态
+
+为组件添加这样的一个装饰器
 
 ```
 @connect(state => {
   console.log(state);
+  // global, sidebar是命名空间
+  cosnt {global, sidebar} = state;
+  return {global, sidebar}
   /*
    * global: {count: 0}, // 你注册了一个namespace为global的model, count是model的状态
    * sidebar: {data: [], title: ""}, // 另一个namespace为sidebar的model
   */
 })
+class Component extends React.Component {
+  render() {
+    // 用过this.props可以访问到model的属性
+
+    this.props.global.propOfGlobal
+
+    this.props.sidebar.propOfSidebar
+  }
+
+}
+
 ```
 
+### 什么状态不应该放在model中?
+
+离开页面后需要重置的状态: 如表单填写的数据, filter的状态
+
+TODO: 结合项目实践补充
+
+ps: 实际上不需要共享的状态全部放model还是放component到现在都没有定论, 但dva的生态似乎默认你的数据都在model上, 如dva-loading. 鉴于此, 我们可以借鉴他们的设计. 这里只列出非常糟糕的设计.
 
 ## router
 
-由于使用 dva 的内部 router, 会有一些限制
+由于使用 dva 的内部 router, 即从`dva/router`引入路由相关的api
 
 Route 必须是 Router 的子元素, 否则会无法正常导航 (nested route 还没测试)
 
 ## 环境变量
 
-## antd 变量修改
+### 定义
+在`.env`以`REACT_APP_`开头的变量名.
 
-在`src/styles/vars.less`下进行修改即可
+比如定义了`REACT_APP_VAR=123`
 
-## 如何进行通信
+### 使用
+
+```
+console.log(process.env.REACT_APP_VAR); // 123
+```
+
+
+
+## iframe
+
+这是我们实现从angular平稳过渡react的方案
+
+### 白名单检查
+
+为了保证通用, iframe的src暴露在url中, 虽然进行了base64编码, 但毕竟是掩耳盗铃, 容易导致安全问题.
+
+因此`IFrame.tsx`内有一个白名单列表, 非这个列表内的地址不会跳转. 写新项目时你可能需要在自己的项目里面维护这个列表
+
+ps: 由于使用自带的base64编码解码, 不支持ascii表以外的字符
+
+### 如何进行通信
 
 p = Parent, 指这个框
 c = Child, 指嵌入的 iframe
 
 p 这边使用了一个组件对通信进行封装, 每次修改 IframeComm 的 postMessageData 属性时, 就会想 c 发送内容为 postMessageData 的信息
 
-### 如何部署起来
+### iframe如何部署
 
 c 端需要在页面中添加
 
@@ -119,11 +165,30 @@ TODO: 需要补充最佳实践, 比如在c的什么地方插入这段内容
 ```
 
 WARNING: !!!!!认真看右边 👉!!!!! 千万不要把 origin 设置为`*`, 会产生极其严重的安全事故.
-ps: 如果一个 iframe 需要在多个项目下工作, 那就要考虑加一个中间页避免 origin 为`*`
+ps: 如果一个 iframe 需要在多个项目下工作, 那就要考虑在一个域名下搭一个中间页避免 origin 为`*`
+
+网络请求
+---
+
+react版本我们使用比较成熟的网络库axios
+
+和以前一样使用中间件模式处理鉴权, 错误. 
+
+ps: loading现在使用`dva-loading`处理, 可以避免写一堆__noLoading__
+
+### 中间件
+
+Utils目录下有常见的和业务相关的中间件模板, 根据注释修改, 然后在`Request.ts`内根据该中间件是request还是response类型的中间件添加即可.
 
 ## Q&A
 
-###如何获取 react-router 当前路径
+## 如何修改 antd 的样式变量修改?
+
+(即antd的定制主题功能)
+
+在`src/Styles/vars.less`下进行修改即可
+
+###如何获取 react-router 当前路径?
 
 每个组件的 props 都会自动注入 history, history内有路径的信息
 
@@ -135,7 +200,7 @@ react-router 可以动态路由. 不需要router guide.
 
 即: 你可以根据后台返回的数据生成路由, 根本不需要先定义, 然后加限制.
 
-## 方案选型理由
+## 方案选型理由?
 
 当前(2018 年 12 月 28 日), 如果我们需要使用 ts+antd+react 的话, 方案虽很多, 但据我对 ts 的了解, ts 并不容易驯服, 特别是在大型项目里面.
 
@@ -150,7 +215,7 @@ react-router 可以动态路由. 不需要router guide.
 
 因此我们选择方案 3, 少量修改的配置前提下, 以后仍然有迁移到 CRA2 甚至升级至 CRA3 的可能
 
-## 为什么禁止修改 wepack 配置
+## 为什么禁止修改 wepack 配置?
 
 从工程角度出发, 我们希望 10 个人的代码风格保持一致, 以降低相互协助时的沟通成本.
 
