@@ -1,14 +1,71 @@
 TODO
 ===
 
-采用iframe方式进行迁移, 需要工作大概包括:
+框架
+---
 
-- parent与iframe通信方案
-- iframe鉴权问题. parent内鉴权后, 如何传递给iframe.
-    - cookie
-    - token
-- 路由带参数. 即对同一个URL, 所有人都能看到的页面是一样的
-- 样式问题
-- iframe刷新问题, 即切换路径会重新初始化一次Angular
-- ts在react使用的坑
-    - react-router的param类型
+- [x] 广告系统统一的layout
+- [x] header
+- [x] 基础业务layout组件
+
+sidebar
+---
+
+- [x] 与广告系统sidebar样式一致
+- [x] 根据路由自动高亮
+
+迁移相关
+---
+
+- [x] 不会随着路由切换而销毁的iframe组件
+- [x] parent与iframe通信方案
+- [ ] iframe鉴权问题. parent内鉴权后, 如何传递给iframe
+- [ ] cookie鉴权
+- [ ] token鉴权
+
+路由
+---
+
+- [ ] router guide (需要测试)
+- [x] 路由url变化监听方案
+- [ ] 路由懒加载
+
+网络
+---
+
+需要实际项目测试
+- [ ] 网络库确定
+- [ ] 网络库token鉴权模式中间件
+- [ ] 网络库cookie鉴权模式中间件
+- [ ] 网络库鉴权错误处理件
+
+其他
+---
+
+- [ ] 路由懒加载文档
+
+需求
+---
+
+- [ ] 路由URL与页面状态同步 (黄凯)
+
+发布
+---
+
+- [ ] 发布工具 (袁康)
+
+文档
+---
+
+- [ ] 状态管理怎么用 (补充错误的model设计)
+- [ ] ts在react中常见问题
+    - [ ] react component, state与props类型如何声明
+    - [ ] 与react-router结合使用
+    - [ ] 与dva结合使用
+- [ ] 项目结构
+- [ ] sidebar怎么使用(如何传参)
+- [ ] iframe怎么使用
+- [ ] 网络请求设计与请求发送方法
+- [ ] 样式如何使用 (全局与组件样式)
+- [ ] 各种最佳实践(需要项目时间)
+

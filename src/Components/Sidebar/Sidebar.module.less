@@ -1,4 +1,4 @@
-@import '../../styles/vars.less';
+@import '../../Styles/vars.less';
 
 
 .h50 {
@@ -11,11 +11,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #001529;
+    background: @menu-dark-bg;
     color: white;
 }
 
 div i.icon {
     color: @primary-color;
     font-size: 30px;
+}
+
+.icon-container {
+    width: 24px;
+    display: inline-block;
 }

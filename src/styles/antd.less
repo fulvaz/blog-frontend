@@ -1,6 +1,5 @@
 @import '~antd/dist/antd.less';
 @import './vars.less';
-
 .ant-menu-item {
     margin: 0 !important;
 }
@@ -13,5 +12,17 @@
         content: "";
         height: 40px;
         border-left: 3px solid #f9963f;
+    }
+}
+
+.ant-menu-dark .ant-menu-inline.ant-menu-sub {
+    box-shadow: none;
+}
+
+ul.ant-menu.ant-menu-dark.ant-menu-root.ant-menu-inline {
+    height: calc(100vh - 98px);
+    overflow: auto;
+    &::-webkit-scrollbar {
+        display: none;
     }
 }
