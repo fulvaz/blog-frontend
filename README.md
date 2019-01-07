@@ -181,6 +181,26 @@ ps: loading现在使用`dva-loading`处理, 可以避免写一堆__noLoading__
 
 Utils目录下有常见的和业务相关的中间件模板, 根据注释修改, 然后在`Request.ts`内根据该中间件是request还是response类型的中间件添加即可.
 
+路由url保存页面状态
+----
+
+ps: 初始化和页面状态变化监控必须要分开.
+
+### page -> url
+
+每个filter都直接修改url的query
+
+### url -> page
+
+每次修改url后重新进行请求
+
+componentDidUpdate
+
+不要使用 componentWillReceiveProps
+
+componentDidUpdate根据变化值的普通采取不同的行动, 
+
+
 ## Q&A
 
 ### 如何修改 antd 的样式变量修改?

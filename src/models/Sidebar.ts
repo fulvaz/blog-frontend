@@ -30,7 +30,7 @@ export const renderData = {
     icon: ""
   },
   10: {
-    path: "/platform-data/company",
+    path: "/url-state",
     icon: "icon-guidang"
   },
   11: {
