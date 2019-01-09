@@ -32,6 +32,8 @@ export class IFrame extends React.Component<{
   public render() {
     const { src, ifHide } = this.props;
     const display = ifHide ? 'none' : 'block';
+
+    if (!src) return <React.Fragment />;
     
     try {
         const decodedSrc = atob(src);

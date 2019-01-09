@@ -15,7 +15,7 @@ import { Link } from 'dva/router';
 export class Sidebar extends React.Component<{
   title?: string | JSX.Element;
   data?: any;
-  selectedKeys: string[],
+  selectedKeys?: string[],
 }> {
   public state: any = {
     collapsed: false

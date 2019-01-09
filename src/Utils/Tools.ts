@@ -1,3 +1,4 @@
+
 export class Tools {
   static getCookie(key: string, forceCookie: boolean = false) {
     if (localStorage && !forceCookie) {

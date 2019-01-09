@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { PageLayout } from "../../Components/PageLayout/PageLayout";
 import { PageTitle } from "../../Components/PageLayout/PageTitle";
 import { PageContent } from "../../Components/PageLayout/PageContent";
-import { Link } from "dva/router";
 import { Table } from "antd";
-import axios from "../../Utils/Request";
+import axios from "../../utils/request";
+import { changeUrl, putStateInUrl } from "../../utils/url-state";
 
 const columns = [
   {
@@ -29,6 +29,7 @@ const columns = [
   }
 ];
 
+@putStateInUrl({ table: { api: "fetch" } })
 export class UrlStateExample extends Component {
   state = {
     data: [],
@@ -43,77 +44,27 @@ export class UrlStateExample extends Component {
   };
 
   componentDidMount() {
-
-
-    // 比普通业务多出的代码start
-    const {
-      location: { search: currSearch }
-    } = this.props as any;
-    const currUrlParams = new URLSearchParams(currSearch);
-    if (currUrlParams.get("table")) {
-      const { pagination, filters, sorter } = JSON.parse(
-        currUrlParams.get("table")
-      );
-      this.setState({
-        pagination,
-        filters,
-        sorter
-      });
-    }
-    // 比普通业务多出的代码end
-
     console.log("componentDidMount: emit when query string change");
     this.fetch();
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    // 比普通业务多出的代码start
-    const {
-      location: { search: prevSearch }
-    } = prevProps;
-    const {
-      location: { search: currSearch }
-    } = this.props as any;
-    const prevUrlParams = new URLSearchParams(prevSearch);
-    const currUrlParams = new URLSearchParams(currSearch);
-
-    if (prevUrlParams.get("table") !== currUrlParams.get("table")) {
-      const { pagination, filters, sorter } = JSON.parse(
-        currUrlParams.get("table")
-      );
-      this.setState({
-        pagination,
-        filters,
-        sorter
-      });
-      this.fetch();
-    }
-    // 比普通业务多出的代码end
-  }
-
-  handleTableChange = (pagination, filters, sorter) => {
-    this.setState({
+  @changeUrl({
+    namespace: "table",
+    filters: ["pagination", "filters", "sorter"]
+  })
+  handleTableChange(pagination, filters, sorter) {
+    this.state = {
+      ...this.state,
       pagination,
       filters,
       sorter
-    });
+    };
+    // this.fetch();
+    // 这里不可以在放fetch, 否则会发两次请求
 
-    // 比普通业务多出的代码start
-    const urlParams = new URLSearchParams();
-    // 额外需要加的代码, 用decorator装饰起来
-    urlParams.set(
-      "table",
-      JSON.stringify({
-        pagination,
-        filters,
-        sorter
-      })
-    );
-    (this.props as any).history.push(`?${urlParams}`);
-    // 比普通业务多出的代码end
-  };
+  }
 
-  fetch = (_ = {}) => {
+  fetch(_ = {}) {
     const { pagination, sorter } = this.state;
     const params = {
       results: pagination.pageSize,
@@ -142,7 +93,7 @@ export class UrlStateExample extends Component {
         pagination
       });
     });
-  };
+  }
 
   render() {
     return (
@@ -155,7 +106,7 @@ export class UrlStateExample extends Component {
             dataSource={this.state.data}
             pagination={this.state.pagination}
             loading={this.state.loading}
-            onChange={this.handleTableChange}
+            onChange={this.handleTableChange.bind(this)}
           />
         </PageContent>
       </PageLayout>

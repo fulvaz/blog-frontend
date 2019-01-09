@@ -5,14 +5,16 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import dva from "dva";
 import { Router, Switch, Route } from "dva/router";
-import { Global } from "./models/Global";
-import { Sidebar } from "./models/Sidebar";
-import { IFrame } from "./models/IFrame";
+import { Global } from "./models/GlobalModel";
+import { Sidebar } from "./models/SidebarModel";
+import { IFrame } from "./models/IFrameModel";
 import { TablePage } from './Pages/TablePage/TablePage';
 import { FormPage } from './Pages/FormPage/FormPage';
 import { NotFound } from './Pages/NotFound/NotFound';
 
+
 const app = dva();
+
 
 app.model(Global);
 app.model(Sidebar);
@@ -30,6 +32,8 @@ app.router(({ history }) => (
 ));
 
 app.start("#root");
+
+window['__DVA_INSTANCE'] = app;
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -4,6 +4,7 @@ import { PageContent } from "./PageContent";
 import style from "./PageLayout.module.less";
 import classNames from "classnames";
 import { IconFont } from "../IconFont/IconFont";
+import { ReactElement } from 'react';
 
 const { Component } = React;
 
@@ -14,10 +15,10 @@ export class PageLayout extends Component<{ ifBackShow?: boolean }> {
   public render() {
     const { children, ifBackShow } = this.props;
     const title = React.Children.toArray(children).find(
-      e => (e as any).type === PageTitle
+      (e: ReactElement<any>) => { return e.type === PageTitle}
     );
     const content = React.Children.toArray(children).find(
-      e => (e as any).type === PageContent
+      (e: ReactElement<any>) => { return e.type === PageContent}
     );
 
     const backBtn = (
