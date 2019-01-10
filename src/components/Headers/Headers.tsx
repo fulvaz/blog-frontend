@@ -12,7 +12,7 @@ export class Headers extends React.Component<{
       <Header
         className="flex flex-jcsb"
         style={{
-          background: "#fff",
+          background: "#fff", 
           padding: '0',
           paddingLeft: '20px',
           boxShadow: "0 3px 6px rgba(3, 4, 6, .2)",
