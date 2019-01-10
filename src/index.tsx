@@ -5,12 +5,9 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import dva from "dva";
 import { Router, Switch, Route } from "dva/router";
-import { Global } from "./models/GlobalModel";
-import { Sidebar } from "./models/SidebarModel";
-import { IFrame } from "./models/IFrameModel";
-import { TablePage } from './Pages/TablePage/TablePage';
-import { FormPage } from './Pages/FormPage/FormPage';
-import { NotFound } from './Pages/NotFound/NotFound';
+import { Global } from "./models/globalModel";
+import { Sidebar } from "./models/sidebarModel";
+import { IFrame } from "./models/iFrameModel";
 
 
 const app = dva();

@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import style from "./App.module.less";
-import "./Styles/antd.less";
-import "./Styles/atomic.less";
-import { Layout, Icon } from "antd";
-import { Sidebar } from "./Components/Sidebar/Sidebar";
-import { Headers } from "./Components/Headers/Headers";
-import classNames from "classnames";
-import { Switch, Route, Link, Router } from "dva/router";
-import { connect, SubscriptionAPI } from "dva";
-import { Dispatch } from "redux";
-import { IFrame } from "./Components/IFrame/IFrame";
-import { renderData as sidebarRenderData } from "./models/SidebarModel";
+import React, { Component } from 'react';
+import style from './App.module.less';
+import './styles/antd.less';
+import './styles/atomic.less';
+import { Layout, Icon } from 'antd';
+import { Sidebar } from './components/Sidebar/Sidebar';
+import { Headers } from './components/Headers/Headers';
+import classNames from 'classnames';
+import { Switch, Route, Link, Router } from 'dva/router';
+import { connect, SubscriptionAPI } from 'dva';
+import { Dispatch } from 'redux';
+import { IFrame } from './components/IFrame/IFrame';
+import { renderData as sidebarRenderData } from './models/sidebarModel';
 const { Content } = Layout;
-import dynamic from "dva/dynamic";
-import { NotFound } from "./Pages/NotFound/NotFound";
+import dynamic from 'dva/dynamic';
+import { NotFound } from './pages/NotFound/NotFound';
 
 
 // 根据后端返回的信息, 渲染route
@@ -21,22 +21,22 @@ import { NotFound } from "./Pages/NotFound/NotFound";
 const app = window['__DVA_INSTANCE'];
 const routeData = {
   2: {
-    component: dynamic({
+    component: (dynamic as any)({
       app,
       // models: () => [].map(e => import(e)),
-      component: () => import("./Pages/FormPage/FormPage").then(e => Object.values(e)[0])
+      component: () => import('./pages/FormPage/FormPage').then(e => Object.values(e)[0])
     }),
   },
   3: {
-    component: dynamic({
+    component: (dynamic as any)({
       app,
-      component: () => import("./Pages/TablePage/TablePage").then(e => Object.values(e)[0])
+      component: () => import('./pages/TablePage/TablePage').then(e => Object.values(e)[0])
     }),
   },
   10: {
-    component: dynamic({
+    component: (dynamic as any)({
       app,
-      component: () => import("./Pages/UrlStateExample/UrlStateExample").then(e => Object.values(e)[0])
+      component: () => import('./pages/UrlStateExample/UrlStateExample').then(e => Object.values(e)[0])
     }),
   }
 };
@@ -55,8 +55,8 @@ class App extends Component<{
     const sidebarData = JSON.parse(
       '[{"key":"Example","id":1,"pid":0,"name":"Example","description":"Example","platform":"OP","platformName":null},{"key":"Table","id":2,"pid":1,"name":"Form","description":"Form","platform":"OP","platformName":null},{"id":3,"pid":1,"name":"Table","description":"Table","platform":"OP","platformName":null},{"key":"url state","id":10,"pid":1,"name":"url state","description":"url state","platform":"OP","platformName":null}]'
     );
-    this.props.dispatch({ type: "sidebar/updateSidebar", data: sidebarData });
-    this.props.dispatch({ type: "sidebar/updateTitle", data: "运营平台" });
+    this.props.dispatch({ type: 'sidebar/updateSidebar', data: sidebarData });
+    this.props.dispatch({ type: 'sidebar/updateTitle', data: '运营平台' });
 
     this.setState({
       routeIdsAllowed: sidebarData.filter(e => e.pid !== 0).map(e => e.id)
@@ -81,7 +81,7 @@ class App extends Component<{
     return (
       <Router history={history}>
         <div>
-          <Layout style={{ minHeight: "100vh" }}>
+          <Layout style={{ minHeight: '100vh' }}>
             <Sidebar />
             <Layout>
               <Headers
@@ -89,7 +89,7 @@ class App extends Component<{
                 right={<span>这是左边</span>}
               />
               <Content>
-                <div className={classNames(style["content-container"])}>
+                <div className={classNames(style['content-container'])}>
                   <div>
                     <Switch>
                       {routeAllow}

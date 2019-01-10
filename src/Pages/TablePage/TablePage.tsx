@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { PageLayout } from "../../Components/PageLayout/PageLayout";
-import { PageTitle } from "../../Components/PageLayout/PageTitle";
-import { PageContent } from "../../Components/PageLayout/PageContent";
+import { PageLayout } from "../../components/PageLayout/PageLayout";
+import { PageTitle } from "../../components/PageLayout/PageTitle";
+import { PageContent } from "../../components/PageLayout/PageContent";
 import { Link } from "dva/router";
 import { connect } from "dva";
 

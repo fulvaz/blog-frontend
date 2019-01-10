@@ -1,4 +1,4 @@
-const DEFAULT_STATE_KEY = "__defaultState";
+const DEFAULT_STATE_KEY = '__defaultState';
 
 interface PutStateInUrlConfig {
   [namespace: string]: {
@@ -19,13 +19,13 @@ export function putStateInUrl(config: PutStateInUrlConfig): any {
 
       const {
         location: { search: currSearch }
-      } = this.props as any;
+      } = this.props;
       const currUrlParams = new URLSearchParams(currSearch);
 
       try {
         Object.keys(config).forEach(k => {
           if (currUrlParams.get(k)) {
-            const data = JSON.parse(currUrlParams.get(k) as string);
+            const data = JSON.parse(currUrlParams.get(k));
             this.state = {
               ...this.state,
               ...data
@@ -52,7 +52,7 @@ export function putStateInUrl(config: PutStateInUrlConfig): any {
       } = prevProps;
       const {
         location: { search: currSearch }
-      } = this.props as any;
+      } = this.props;
       const prevUrlParams = new URLSearchParams(prevSearch);
       const currUrlParams = new URLSearchParams(currSearch);
 
@@ -75,7 +75,7 @@ export function putStateInUrl(config: PutStateInUrlConfig): any {
           try {
             if (currUrlParams.get(k)) {
               // TODO:
-              const data = JSON.parse(currUrlParams.get(k) as string);
+              const data = JSON.parse(currUrlParams.get(k));
               this.setState(
                 {
                   ...data
@@ -90,7 +90,9 @@ export function putStateInUrl(config: PutStateInUrlConfig): any {
           }
         }
       });
-      componentDidUpdate.call(this, prevProps, prevState, snapshot);
+      if (componentDidUpdate) {
+        componentDidUpdate.call(this, prevProps, prevState, snapshot);
+      }
     };
   };
 }
@@ -108,11 +110,11 @@ export function changeUrl(config: ChangeUrlConfig) {
       const data = config.filters.reduce((p, k) => {
         return {
           ...p,
-          [k]: (this as any).state[k]
+          [k]: (this).state[k]
         };
       }, {});
       urlParams.set(config.namespace, JSON.stringify(data));
-      ((this as any).props as any).history.push(`?${urlParams}`);
+      ((this).props).history.push(`?${urlParams}`);
     };
   };
 }

@@ -1,32 +1,31 @@
-import * as React from "react";
-import { PageTitle } from "./PageTitle";
-import { PageContent } from "./PageContent";
-import style from "./PageLayout.module.less";
-import classNames from "classnames";
-import { IconFont } from "../IconFont/IconFont";
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
+import style from './PageLayout.module.less';
+import classNames from 'classnames';
+import { Iconfont } from '../Iconfont/Iconfont';
+import { PageTitle } from '../PageLayout/PageTitle';
+import { PageContent } from '../PageLayout/PageContent';
 
 const { Component } = React;
 
 export class PageLayout extends Component<{ ifBackShow?: boolean }> {
   public back = () => {
     history.back();
-  };
+  }
   public render() {
     const { children, ifBackShow } = this.props;
     const title = React.Children.toArray(children).find(
-      (e: ReactElement<any>) => { return e.type === PageTitle}
+      (e: ReactElement<any>) => { return e.type === PageTitle; }
     );
     const content = React.Children.toArray(children).find(
-      (e: ReactElement<any>) => { return e.type === PageContent}
+      (e: ReactElement<any>) => { return e.type === PageContent; }
     );
 
     const backBtn = (
       <React.Fragment>
         <span className={style.back} onClick={this.back}>
-          <IconFont
+          <Iconfont
             type="icon-fanhui"
-            className={classNames("mr10", style["icon-back"])}
+            className={classNames('mr10', style['icon-back'])}
           />
           <span>返回</span>
         </span>

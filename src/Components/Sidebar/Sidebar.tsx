@@ -2,9 +2,9 @@ import { Icon, Layout, Menu } from "antd";
 import * as React from "react";
 const SubMenu = Menu.SubMenu;
 const { Sider } = Layout;
-import * as classNames from "classnames";
+import classNames from "classnames";
 import style from "./Sidebar.module.less";
-import { IconFont } from "../IconFont/IconFont";
+import { Iconfont } from "../Iconfont/Iconfont";
 import { connect } from 'dva';
 import { Link } from 'dva/router';
 
@@ -34,7 +34,7 @@ export class Sidebar extends React.Component<{
                 key={e.id}
                 title={
                   <span>
-                    <IconFont type={e.icon} />
+                    <Iconfont type={e.icon} />
                     <span>{e.name}</span>
                   </span>
                 }
@@ -52,7 +52,7 @@ export class Sidebar extends React.Component<{
             return (
               <Menu.Item key={e.id}>
                 <Link to={e.path}>
-                  <IconFont type={e.icon} />
+                  <Iconfont type={e.icon} />
                   <span>{e.name}</span>
                 </Link>
               </Menu.Item>
@@ -72,7 +72,7 @@ export class Sidebar extends React.Component<{
       >
         <div className={style.h50}>
           <div className={style["title-head"]}>
-            <IconFont type="icon-logo" className={classNames(style.icon)} />
+            <Iconfont type="icon-logo" className={classNames(style.icon)} />
             <p className="m0 ml10">{collapsed ? "" : title}</p>
           </div>
         </div>
