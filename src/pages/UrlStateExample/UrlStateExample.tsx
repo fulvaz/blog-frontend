@@ -73,26 +73,26 @@ export class UrlStateExample extends Component {
       sortOrder: (sorter as any).order
     };
 
-    console.log("params:", params);
-    this.setState({ loading: true });
-    axios({
-      url: "https://randomuser.me/api",
-      method: "get",
-      params: {
-        results: 10,
-        ...params
-      }
-    }).then(res => {
-      const pagination = { ...this.state.pagination };
-      // Read total count from server
-      // pagination.total = data.totalCount;
-      pagination.total = 200;
-      this.setState({
-        loading: false,
-        data: (res.data as any).results,
-        pagination
-      });
-    });
+    // console.log("params:", params);
+    // this.setState({ loading: true });
+    // axios({
+    //   url: "https://randomuser.me/api",
+    //   method: "get",
+    //   params: {
+    //     results: 10,
+    //     ...params
+    //   }
+    // }).then(res => {
+    //   const pagination = { ...this.state.pagination };
+    //   // Read total count from server
+    //   // pagination.total = data.totalCount;
+    //   pagination.total = 200;
+    //   this.setState({
+    //     loading: false,
+    //     data: (res.data as any).results,
+    //     pagination
+    //   });
+    // });
   }
 
   render() {

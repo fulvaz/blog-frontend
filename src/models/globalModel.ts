@@ -1,5 +1,5 @@
 export const Global = {
-  namespace: "global",
+  namespace: 'global',
   state: {
     count: 0
   },
@@ -14,7 +14,7 @@ export const Global = {
   effects: {
     *add(action, { call, put }) {
       yield call(delay, 1000);
-      yield put({ type: "add" });
+      yield put({ type: 'add' });
     }
   },
   subscriptions: {
@@ -23,7 +23,7 @@ export const Global = {
       // 监听路由的变化，请求页面数据
       return history.listen(a => {
         // 根据路径侧边栏高亮
-        
+
       });
     }
   }
