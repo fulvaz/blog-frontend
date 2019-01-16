@@ -1,70 +1,89 @@
+import { API } from '../utils/api';
+
 export const renderData = {
-  1: { icon: "icon-Pagex", path: "" },
-  2: { icon: "", path: "/form" },
-  3: {
-    path: "/", // customer-management
-    icon: "icon-icon-test23"
+  example: {
+    path: '/example',
+    icon: '', // 二级菜单设置icon无效
+    name: '', // 现在name已经交给后端进行控制, 这个字段仅用来做备注
   },
-  4: {
-    path: "/material-data/designer/home",
-    icon: "icon-icon-test23"
+  form: {
+    path: '/form',
+    icon: '',
+    name: '',
   },
-  5: {
-    path: "/",
-    icon: ""
+  table: {
+    path: '/table',
+    icon: '',
+    name: '',
   },
-  10: {
-    path: "/url-state",
-    icon: "icon-guidang"
+  urlState: {
+    path: '/url-state',
+    icon: '',
+    name: '',
   },
+  channelManagement: {
+    path: '/channel-management',
+    icon: '',
+    name: '',
+  }
 };
+
+
 
 const transformSidebarData = data => {
   if (!data.length) return;
-  return data
+  try {
+    return data
     .map(e => {
       return {
         ...e,
-        icon: renderData[e.id].icon,
-        path: renderData[e.id].path,
+        icon: renderData[e.key].icon,
+        path: renderData[e.key].path,
         children: data
           .filter(d => d.pid === e.id)
           .map(e => {
             return {
               ...e,
-              icon: renderData[e.id].icon,
-              path: renderData[e.id].path
+              icon: renderData[e.key].icon,
+              path: renderData[e.key].path
             };
           })
       };
     })
     .filter(e => e.pid === 0);
+  } catch(e) {
+    console.error('Update sidebar error, please check renderData');
+  }
 };
 
+
 export const Sidebar = {
-  namespace: "sidebar",
+  namespace: 'sidebar',
   state: {
-    title: "",
+    title: 'SSP IPortal',
     data: [],
+    dataFlat: [],
     selectedKeys: [],
   },
   reducers: {
     updateSidebar(state, action) {
-      const dataTransformed = transformSidebarData(action.data);
+      const dataTransformed = transformSidebarData(action.payload);
+      const dataFlat = action.payload.map(e => {
+        return {
+          ...e,
+          icon: renderData[e.key].icon,
+          path: renderData[e.key].path,
+        };
+      });
       return {
         ...state,
-        data: dataTransformed
-      };
-    },
-    updateTitle(state, action) {
-      return {
-        ...state,
-        title: action.data,
+        data: dataTransformed,
+        dataFlat,
       };
     },
     activeMenuItemByPath(state, action) {
       const {data} = state;
-      const pathname = action.data;
+      const pathname = action.payload;
 
       if (!data || !data.length) {
         return state;
@@ -77,23 +96,29 @@ export const Sidebar = {
             ...p,
             n,
             ...n.children,
-          ]
+          ];
         }, []);
         const item = sidebarData.find(e => e.path === pathname);
         return {
           ...state,
           selectedKeys: ['' + item.id],
-        }
-      } catch(e) {
-        console.log(`sidebar: active menu item failed. "${pathname}" not found`)
+        };
+      } catch (e) {
+        console.log(`sidebar: active menu item failed. "${pathname}" not found`);
         return state;
       }
+    }
+  },
+  effects: {
+    *fetchSidebar(action, {select, call, put}) {
+      const menu = yield call(API.fetchMenu, {});
+      yield put({type: 'updateSidebar', payload: menu});
     }
   },
   subscriptions: {
     routeWatch({dispatch, history}) {
       return history.listen(({pathname}) => {
-        dispatch({type: 'activeMenuItemByPath', data: pathname})
+        dispatch({type: 'activeMenuItemByPath', payload: pathname});
       });
     },
   }

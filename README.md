@@ -22,12 +22,15 @@ Love and peace -> [~~改 webpack 配置可能会导致的问题~~](https://www.h
 
 ### 命名
 
-参考antd-pro
+参考 antd-pro
 
-- 对组件, 其文件名及其目录名用Pascal命名
-- 最其他, 文件名和目录名均小写, 使用驼峰命名, 包括model, 其中model需要显式添加Model作为文件名结尾, 如`userModel.ts`
-- 类名: 用Pascal命名, 即`EeservationCard`
+- 对组件, 其文件名及其目录名用 Pascal 命名
+- 最其他, 文件名和目录名均小写, 使用驼峰命名, 包括 model, 其中 model 需要显式添加 Model 作为文件名结尾, 如`userModel.ts`
+- 类名: 用 Pascal 命名, 即`EeservationCard`
 - 样式类型: 用`-`分割单词, 即`.table-head`
+- model: namespace 统一驼峰命名
+- sidebar 唯一标识符 key: 驼峰命名
+- 路由, 单词小写, `-`分割单词
 
 ps: 对组件的样式文件名需要加上 module, 如`page.module.less`, 否则无法使用模块化
 
@@ -43,13 +46,13 @@ ps: `visual code`安装`prettier`插件, 然后格式化(alt+f)即可
 
 ### 样式
 
-其实一个div一个类名没有必要, 样式文件里还会有大量重复的样式代码
+其实一个 div 一个类名没有必要, 样式文件里还会有大量重复的样式代码
 
 针对业务的样式, 我们可以将样式分为: 布局样式与装饰样式
 
-- 通常来说装饰样式是可以复用的, 比如你多个button都长一个样, 这时共享一个class即可
+- 通常来说装饰样式是可以复用的, 比如你多个 button 都长一个样, 这时共享一个 class 即可
 
-- 布局样式是很难复用的, 比如padding, margin, top, left这种, 部分情况下width和height也是如此. 涉及到布局样式, 推荐使用atomic css的做法, 把布局都抽出一个个很小的类, 即, 类似这样
+- 布局样式是很难复用的, 比如 padding, margin, top, left 这种, 部分情况下 width 和 height 也是如此. 涉及到布局样式, 推荐使用 atomic css 的做法, 把布局都抽出一个个很小的类, 即, 类似这样
 
 ```css
 .p20 {
@@ -61,7 +64,7 @@ ps: `visual code`安装`prettier`插件, 然后格式化(alt+f)即可
 }
 ```
 
-那你在使用的时候直接把`p20`放在你需要的标签内即可. 这样还能解决一个div一个类名的问题, 通常来说, 这个div的类名可能只是改了一下布局, 就为一个padding新建一个类太浪费了.
+那你在使用的时候直接把`p20`放在你需要的标签内即可. 这样还能解决一个 div 一个类名的问题, 通常来说, 这个 div 的类名可能只是改了一下布局, 就为一个 padding 新建一个类太浪费了.
 
 `atomic.less`下已经提取了常见的布局样式, 可以当全局样式直接使用
 
@@ -69,20 +72,20 @@ ps: `visual code`安装`prettier`插件, 然后格式化(alt+f)即可
 
 #### 必须遵守的规则
 
-你可以在div内内联style的方式写样式, 但是属性数量不能超过6个, 超过6个必须放在样式文件中.
+你可以在 div 内内联 style 的方式写样式, 但是属性数量不能超过 6 个, 超过 6 个必须放在样式文件中.
 
 #### 最佳实践
 
-另外这个项目下使用css module时, webpack已经帮我们把下划线命名的class自动修改位驼峰命名, 即, 你在使用时, 不需要`style['flex-wrap]`, 直接style.flexWrap即可
+另外这个项目下使用 css module 时, webpack 已经帮我们把下划线命名的 class 自动修改位驼峰命名, 即, 你在使用时, 不需要`style['flex-wrap]`, 直接 style.flexWrap 即可
 
 请务必使用 css module, 以实现样式封装, 请不要把组件样式放在全局
 
 推荐使用 less 或者 css, 原因是 less 兼容 css 和 scss 的语法, 而且可以避免被 node-sass 折磨. (当前版本暂未移除 sass 依赖, 不排除以后哪天会移除, 推荐使用 less 降低迁移成本)
 
-使用css module时, 多个类名存在需要拼接字符串的问题, 可以使用`className`这个类库帮你拼接
+使用 css module 时, 多个类名存在需要拼接字符串的问题, 可以使用`className`这个类库帮你拼接
 
 1. 是否封装 是
-2. less style 共存 超过6个不允许使用style
+2. less style 共存 超过 6 个不允许使用 style
 
 TODO: 样式部分文档需要润色
 
@@ -94,45 +97,45 @@ src
 ├── index.css
 ├── index.tsx
 ├── assets --- 静态资源目录
-│   └── logo.svg
+│ └── logo.svg
 ├── components --- 存放通用组件, 即需要多个页面共享的组件放这里,否则放页面目录
-│   ├── iframe
-│   │   ├── iframe-comm.tsx
-│   │   ├── iframe.less
-│   │   └── iframe.tsx
-│   └── page-layout
-│       ├── page-content.tsx
-│       ├── page-layout.module.less
-│       ├── page-layout.tsx
-│       └── page-title.tsx
+│ ├── iframe
+│ │ ├── iframe-comm.tsx
+│ │ ├── iframe.less
+│ │ └── iframe.tsx
+│ └── page-layout
+│ ├── page-content.tsx
+│ ├── page-layout.module.less
+│ ├── page-layout.tsx
+│ └── page-title.tsx
 ├── models --- 状态管理定义文件, 全局使用的放在这里, 否则在自己的页面项目新建一个[pageName].ts 文件
-│   ├── global.ts
-│   ├── iframe.ts
-│   └── sidebar.ts
+│ ├── global.ts
+│ ├── iframe.ts
+│ └── sidebar.ts
 ├── pages --- 业务页面文件夹
-│   └── table-page
-│       ├── table-filter-one --- 页面下需要提取组件的话, 新建一个文件夹即可, 不需要新建component文件夹
+│ └── table-page
+│ ├── table-filter-one --- 页面下需要提取组件的话, 新建一个文件夹即可, 不需要新建 component 文件夹
 
-│       │   └── table-filter-one.tsx
-│       ├── table-filter-two
-│       │   └── table-filter-two.tsx
-│       ├── table-page-model.ts
-│       └── table-page.tsx
+│ │ └── table-filter-one.tsx
+│ ├── table-filter-two
+│ │ └── table-filter-two.tsx
+│ ├── table-page-model.ts
+│ └── table-page.tsx
 ├── serviceWorker.js
 ├── style --- 全局样式, 可以在 app.tsx 内直接引入
-│   ├── antd.less
-│   ├── atomic.less
-│   ├── iconfont.less
-│   └── vars.less
+│ ├── antd.less
+│ ├── atomic.less
+│ ├── iconfont.less
+│ └── vars.less
 └── utils --- 通用工具库
-    ├── http-interceptors --- HTTP 中间件配置文件
-    │   ├── cookie-auth.ts
-    │   ├── dev.ts
-    │   ├── err.ts
-    │   └── token-auth.ts
-    ├── request.ts
-    ├── tools.ts
-    └── url-state.ts
+├── http-interceptors --- HTTP 中间件配置文件
+│ ├── cookie-auth.ts
+│ ├── dev.ts
+│ ├── err.ts
+│ └── token-auth.ts
+├── request.ts
+├── tools.ts
+└── url-state.ts
 
 说明:
 
@@ -140,7 +143,7 @@ src
 
 #### 必须遵守的规则
 
-对简单的业务, 只有一个model时, model文件可以与页面平级(model并非必须的). 如果多个, 则需要新建一个`models`文件夹, 把你的model放进去
+对简单的业务, 只有一个 model 时, model 文件可以与页面平级(model 并非必须的). 如果多个, 则需要新建一个`models`文件夹, 把你的 model 放进去
 
 TODO: 需要验证当前结构是否适合业务开发
 
@@ -224,7 +227,7 @@ Route 必须是 Router 的子元素, 否则会无法正常导航 (nested route �
 
 比如定义了`REACT_APP_ENV=local`
 
-需要等发布工具支持才可以使用自定义变量, 现在仅支持REACT_APP_ENV
+需要等发布工具支持才可以使用自定义变量, 现在仅支持 REACT_APP_ENV
 
 ### 使用
 
@@ -256,7 +259,7 @@ p 这边使用了一个组件对通信进行封装, 每次修改 IframeComm 的 
 c 端需要在页面中添加
 
 ```js
-window.addEventListener("message", e => {
+window.addEventListener('message', e => {
   console.log(e);
   // 1. 这里需要检查e.origin是否合法
   // 2. 根据传过来的e.data进行相应的处理
@@ -320,17 +323,17 @@ dynamic({
 
 s1. 在组件的 class 添加`@putStateInUrl(config)`
 
-  config 的格式见 PutStateInUrlConfig
+config 的格式见 PutStateInUrlConfig
 
-  ```ts
-  interface PutStateInUrlConfig {
-    [namespace: string]: {
-      api: string;
-    };
-  }
-  ```
+```ts
+interface PutStateInUrlConfig {
+  [namespace: string]: {
+    api: string;
+  };
+}
+```
 
-  其中 namespace 是一部分 UI 的命名空间, 自己定就可以了, 通常命名空间下面会有多个 filter 字段, 不需要在这里定义
+其中 namespace 是一部分 UI 的命名空间, 自己定就可以了, 通常命名空间下面会有多个 filter 字段, 不需要在这里定义
 
 s2. 在个筛选的回调函数上添加`@changeUrl(config)`
 
@@ -354,23 +357,22 @@ namespace 就是你在上面定义的 namespace 字段, filter 是这个 namespa
 1. 我们默认你会在 componentDidMount 里面初始化数据
 2. 你在 handleTableChange 类似的回调函数里面不会调用获取数据的 api (装饰器会帮你在修改路由时统一调用该 api)
 
-Table
----
+## Table
 
 ### 要求
 
-1. 首列与操作列(通常是最后一列)需要fixed, 最后一列不是操作的话不需要fixed
+1. 首列与操作列(通常是最后一列)需要 fixed, 最后一列不是操作的话不需要 fixed
 2. 表格太宽但页面太窄中间需要可以滚动
-3. 保证每一列不需要换行即可显示, 如果某列内容太多, 可以用`...`省略过长的内容, 然后用tooltip的形式显示全部内容
+3. 保证每一列不需要换行即可显示, 如果某列内容太多, 可以用`...`省略过长的内容, 然后用 tooltip 的形式显示全部内容
 4. 推荐全部列固定宽度
 
 ### 当前最佳实践
 
-首列与最后一列设为fixed, 分别设置自己的宽度 (最后一列不为'操作'的话不设置fixed)
+首列与最后一列设为 fixed, 分别设置自己的宽度 (最后一列不为'操作'的话不设置 fixed)
 
-然后设置中间滚动, 其中scroll.x的经验值是, 列的数量*200, scroll.x设置规则, 见[这个issue](https://github.com/ant-design/ant-design/issues/11328#issuecomment-408664916)
+然后设置中间滚动, 其中 scroll.x 的经验值是, 列的数量\*200, scroll.x 设置规则, 见[这个 issue](https://github.com/ant-design/ant-design/issues/11328#issuecomment-408664916)
 
-然后观察页面效果, 如果内容比较多, 适当增加scroll.x的值, 否则减少scroll.x的值.
+然后观察页面效果, 如果内容比较多, 适当增加 scroll.x 的值, 否则减少 scroll.x 的值.
 
 warning: 对每一列设置宽度很可能会导致高分辨率下显示错误
 
@@ -419,12 +421,102 @@ react-router 可以动态路由. 不需要 router guide.
 
 这便是禁止随意修改 webpack 配置的原因.
 
-### 我怎么觉得方案有点low?
+### 我怎么觉得方案有点 low?
 
-如果你的项目预计会有30w行以上代码的话, 你可能需要重新设计一个适合的方案, 而不是这个.
+如果你的项目预计会有 30w 行以上代码的话, 你可能需要重新设计一个适合的方案, 而不是这个.
 
 ### 如何添加一个新页面
 
 1. 在`pages`下新建文件
-2. 添加路由
-3. 添加菜单
+2. 在`RuoteConfig`中添加路由
+3. 在权限管理平台添加侧边栏信息, 注意添加角色权限. 在`sidebarModel`添加菜单的 renderData, 其中 key 需要和你刚在在管理平台添加的 key 一致
+
+ps: 请不要使用 id 作为你菜单的唯一标识符, 在不用环境 id 是会变化的, 请使用 key
+
+### 如何快速编写页面组件的类型
+
+你可以使用我提供的 PageComponent, 传入 PageComponent 的泛型为你组件的私有属性
+
+例子如下
+
+```ts
+export class TablePage extends Component<
+  PageComponent<{
+    prop1: string;
+    prop2: string;
+  }>
+> {
+  render() {
+    return (
+      <PageLayout ifBackShow={true}>
+        <PageTitle>这是一个标题</PageTitle>
+        <PageContent>
+          <div style={{ height: '200vh' }}>
+            <Link to="form">About</Link>
+            这是表格
+          </div>
+        </PageContent>
+      </PageLayout>
+    );
+  }
+}
+```
+
+其中 PageComponent 额外添加了
+
+- history
+- dispatch
+- location
+- match
+- staticContext?: C
+
+如果你这个是 Form 页面, 而且使用了 antd 的 Form 组件, 那么你可以使用 FormComponent 帮助你编写类型
+
+FormComponent 除了 PageComponent 的全部属性外, 还添加了 antd Form 需要的 form 属性.
+
+### 如何使用 iconfont
+
+这里我们使用了 antd 提供的工具, 你可以用以下的方式使用 iconfont.
+
+```tsx
+<Iconfont
+  type="icon-fanhui"
+/>
+```
+
+以前我们使用iconfont是直接写unicode, 这不利于我们在代码中辨认图标, 现在我们使用symbol.
+
+打开iconfont.cn -> 我的项目, 上方你可以看到三种图标使用方式: Unicode, Font class, Symbol, 选symbol, 在你需要使用的图标上点击'复制代码'
+
+将'代码'传入到例子的type属性中即可使用图标
+
+### antd table会提示fixed类型不正确的问题
+
+
+比如你的column里有一项:
+
+```
+{
+  title: '渠道ID',
+  dataIndex: 'id',
+  fixed: 'left',
+  width: 100
+},
+```
+
+tslint会提示你说fixed类型不匹配.
+
+```
+{
+  title: '渠道ID',
+  dataIndex: 'id',
+  fixed: 'left'  as 'left',
+  width: 100
+},
+```
+
+加上强制类型转换即可
+
+### 我需要用webpack-bundle-analyzer分析打包结果
+
+运行`npm run stat`

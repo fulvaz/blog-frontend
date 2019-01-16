@@ -26,7 +26,7 @@ sidebar
 路由
 ---
 
-- [ ] router guide (需要测试)
+- [ ] router guide
 - [x] 路由url变化监听方案
 - [x] 路由懒加载
 

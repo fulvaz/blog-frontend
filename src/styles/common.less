@@ -1,0 +1,23 @@
+@import './vars.less';
+
+.link {
+    color: @link-color;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: all 0.2s ease;
+    &[disabled] {
+        color: #999;
+    }
+    &:hover:not([disabled]) {
+        color: @link-hover;
+    }
+}
+
+.ellipsis {
+    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

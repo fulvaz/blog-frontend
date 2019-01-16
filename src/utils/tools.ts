@@ -64,10 +64,6 @@ export class Tools {
   static jumpTo(url) {
     // 如果将打包结果部署到localhost, 那么不会发生跳转
     // 用127.0.0.1访问即可正常跳转
-    if (process.env.REACT_APP_ENV) {
-      console.log(`navigate to ${url}, but blocked`);
-      // return;
-    }
     history.pushState(null, document.title, location.href);
     location.href = url;
   }

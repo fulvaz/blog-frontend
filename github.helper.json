@@ -1,0 +1,14 @@
+{
+  "dev": {
+    "remote": "",
+    "branch": "dev",
+    "ignore": [],
+    "dirname": "www"
+  },
+  "production": {
+    "remote": "",
+    "branch": "prod",
+    "ignore": [],
+    "dirname": "www"
+  }
+}

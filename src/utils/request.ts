@@ -1,34 +1,28 @@
-import axios from "axios";
-import {Modal} from 'antd';
+import axios from 'axios';
+import { ErrInterceport } from './httpInterceptors/err';
+import { CookieAuthInterceport } from './httpInterceptors/cookieAuth';
+import { TransformDataInterceport } from './httpInterceptors/transformData';
 
-const {error} = Modal;
+axios.interceptors.request.use(...CookieAuthInterceport.req);
 
-function showErr(content) {
-    error({
-        title: '网络错误',
-        content,
-    });
-}
+axios.interceptors.response.use(...ErrInterceport.res);
+axios.interceptors.response.use(...TransformDataInterceport.res);
 
-
-axios.interceptors.request.use(
-  function(config) {
-    return config;
-  },
-  function(error) {
-    return Promise.reject(error);
-  }
-);
-
-axios.interceptors.response.use(
-  function(response) {
-    // Do something with response data
-    return response;
-  },
-  function(error) {
-    // Do something with response error
-    return Promise.reject(error);
-  }
-);
+axios.defaults.withCredentials = true;
 
 export default axios;
+
+// export default {
+//   get(...args) {
+//     return axios.get.apply(axios, args).then(e => e.data);
+//   },
+//   post(...args) {
+//     return axios.post.apply(axios, args).then(e => e.data);
+//   },
+//   delete(...args) {
+//     return axios.delete.apply(axios, args).then(e => e.data);
+//   },
+//   put(...args) {
+//     return axios.put.apply(axios, args).then(e => e.data);
+//   },
+// };
