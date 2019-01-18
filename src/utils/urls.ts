@@ -40,8 +40,8 @@ export function putStateInUrl(namespace: string, config: PutStateInUrlConfig, iS
                 const paramsToChildObj = ParamsObjToObject(curr_paramsObj, namespace);
 
                 //将url参数值与初始值合并生成state
-                const state = AssignObject(paramsToChildObj, this[DEFAULT_STATE_KEY]);
-
+                const state = AssignObject(this[DEFAULT_STATE_KEY],paramsToChildObj, );
+ 
                 //获取跟filters相关的值
                 const params = CreateParamsByFilters(state, filters);
                 const setStateCb = () => {
@@ -66,7 +66,6 @@ export function putStateInUrl(namespace: string, config: PutStateInUrlConfig, iS
         //组件改变就会调用
         const componentDidUpdate = target.prototype.componentDidUpdate;
         target.prototype.componentDidUpdate = function(prevProps, prevState, snapshot) {
-            console.log('2222')
             const { location: { search: prevSearch } } = prevProps;
             const { location: { search: currSearch } } = this.props;
             const prevUrlParams = new URLSearchParams(prevSearch);
@@ -77,7 +76,6 @@ export function putStateInUrl(namespace: string, config: PutStateInUrlConfig, iS
 
             //将新的url参数转化 paramsObj格式 {namespace-filter-a-b...-e-f:value}
             const curr_paramsObj = ParamsToParamsObj(currUrlParams);
-
             Object.keys(config).forEach((method: string) => {
 
                 //标记url参数是否改变
@@ -89,12 +87,11 @@ export function putStateInUrl(namespace: string, config: PutStateInUrlConfig, iS
                     }
                 });
                 if (status) {
-
                     //将paramsObj格式转为childObj格式 {namespace-filter-a-b...-e-f} to {filter:{a:{b:obj}}}
                     const paramsToChildObj = ParamsObjToObject(curr_paramsObj, namespace);
 
                     //将url参数值与state/props值合并生成新的state
-                    const state = AssignObject(paramsToChildObj, iSDav ? this.props : this.state);
+                    const state = AssignObject(iSDav ? this.props : this.state,paramsToChildObj);
 
                     //获取跟filters相关的值
                     const params = CreateParamsByFilters(state, filters);
@@ -105,13 +102,12 @@ export function putStateInUrl(namespace: string, config: PutStateInUrlConfig, iS
 
                     //非Dav环境会帮忙设置state并调用method，Dav环境不会设置state只会调用method
                     if (!iSDav) {
-                        // this.setState(
-                        //     {
-                        //         ...state
-                        //     },
-                        //     setStateCb
-                        // );
-                        setStateCb();
+                        this.setState(
+                            {
+                                ...state
+                            },
+                            setStateCb
+                        );
                     } else {
                         setStateCb();
                     }
@@ -132,7 +128,6 @@ export function changeUrl(config: ChangeUrlConfig) {
             const urlParams = new URLSearchParams();
             config.filters.forEach((filter) => {
                 const params = ObjectToParamsObj(config.isDav ? this.props : this.state, config.namespace, filter);
-                console.log(params);
                 Object.keys(params).forEach((param) => {
                     urlParams.set(param, params[param]);
                 });

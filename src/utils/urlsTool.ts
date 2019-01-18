@@ -104,11 +104,18 @@ export function ParamsObjKeyToChildObj(paramsObjKeys: string[], value: any) {
  * @return {Object} 返回多层级的object
  * @description 将childObj 合并，本质上是object对象合并
  */
-export function AssignObject(origin: {}, child: {}) {
-    const origin_bak = JSON.parse(JSON.stringify(origin)); //复制原始object,此处不严谨
-    const origin_bak_keys = Object.keys(origin_bak?origin_bak:{}); //原始object的key值
-    const child_keys = Object.keys(child?child:{}); //子对象的key值
+export function AssignObject(origin: any, child: any) {
+    //不是object就赋值
+    if (typeof origin !== 'object' || Array.isArray(origin)) {
+        return child;
+    }
+    if (typeof child !== 'object' || Array.isArray(child)) {
+        return child;
+    }
 
+    const origin_bak = JSON.parse(JSON.stringify(origin)); //复制原始object,此处不严谨
+    const origin_bak_keys = Object.keys(origin_bak); //原始object的key值
+    const child_keys = Object.keys(child); //子对象的key值
     child_keys.forEach((child_key) => {
         //判断是否存在相同的key值
         if (origin_bak_keys.indexOf(child_key) === -1) {
@@ -172,22 +179,12 @@ export function JudgeParamsStatus(namespace: string, filter: string, currParams:
     const prevkes = Object.keys(prevParams).filter((key) => {
         return key.indexOf(`${namespace}-${filter}`) === 0;
     });
-    if (currkes.length === 0 && prevkes.length === 0) {
-        return true;
-    }
     if (currkes.length !== prevkes.length) {
         return true;
     }
 
-    const differs = currkes.filter((curr) => {
-        const diffrs = prevkes
-            .filter((prev) => {
-                return prevParams[prev] !== currParams[prev];
-            })
-            .filter((prev) => {
-                return prevParams[prev] !== currParams[curr];
-            });
-        return diffrs.length > 0;
+    const differs = currkes.concat(prevkes).filter((key) => {
+        return currParams[key] !== prevParams[key];
     });
     return differs.length > 0 ? true : false;
 }

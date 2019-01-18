@@ -58,6 +58,7 @@ export class UrlStateExample extends Component {
       filters,
       sorter
     };
+    console.log(this.state)
     // this.fetch();
     // 这里不可以在放fetch, 否则会发两次请求
   }
