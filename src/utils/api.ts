@@ -47,64 +47,20 @@ export class API {
     ]);
   }
 
-  public static fetchChannelsList(params, option?) {
-    return request.get(`${API_PREFIX}/channels`, { ...option, params });
-  }
-
-  public static createChannels(params, option?) {
-    return request.post(`${API_PREFIX}/channels`, params, option);
-  }
-
-  public static updateChannels(params, option?) {
-    return request.put(`${API_PREFIX}/channels`, params, option);
-  }
-
-  public static fetchChannelsById(params, option?) {
-    const { id } = params;
-    delete params.id;
-    return request.get(`${API_PREFIX}/channels/${id}`, { ...option, params });
-  }
-
-  public static deleteChannelsById(params, option?) {
-    const { id } = params;
-    delete params.id;
-    return request.delete(`${API_PREFIX}/channels/${id}`, {
-      ...option,
-      params
+  public static fetchFakeData(params, option?) {
+    const { page, size } = params;
+    console.log(size);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        let arr = new Array(+size);
+        arr = arr
+          .fill(0)
+          .map((e, idx) => ({ id: idx, name: `${page}xxx`, title: 'xxx' }));
+        resolve({
+          totalSize: size * 10 + 1,
+          data: arr
+        });
+      }, 100);
     });
-  }
-
-  public static fetchGatewayUser(params?, option?) {
-    return request.get(`${API_PREFIX}/gateway_users`, { ...option, params });
-  }
-
-  public static createChannelAudience(params?, option?) {
-    return request.post(`${API_PREFIX}/channel/audience`, params, option);
-  }
-
-  public static updateChannelAudience(params, option?) {
-    return request.put(`${API_PREFIX}/channel/audience`, params, option);
-  }
-
-  public static updateChannelAudienceUpdateStatus(params, option?) {
-    return request.put(`${API_PREFIX}/channel/audience/updateStatus`, params, option);
-  }
-
-  public static fetchChannelAudienceById(params?, option?) {
-    const {channelId, id} = params;
-    delete params.channelId;
-    delete params.id;
-    return request.get(`${API_PREFIX}/channel/${channelId}/audience/${id}`, { ...option, params });
-  }
-
-  public static fetchChannelAudience(params?, option?) {
-    const channelId = params.channelId;
-    delete params.channelId;
-    return request.get(`${API_PREFIX}/channel/${channelId}/audience`, { ...option, params });
-  }
-  public static getWhareTargetsById(params?, option?) {
-    const id = params.id;
-    delete params.id;
-    return request.get(`${API_PREFIX}/shareTargets/${id}`, { ...option, params });
   }
 }
