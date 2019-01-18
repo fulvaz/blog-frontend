@@ -5,108 +5,95 @@ import { PageContent } from '../../components/PageLayout/PageContent';
 import { Table } from 'antd';
 import axios from '../../utils/request';
 import { changeUrl, putStateInUrl } from '../../utils/urls';
+import { API } from '../../utils/api';
 
 const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        sorter: true,
-        render: (name) => `${name.first} ${name.last}`,
-        width: '20%'
-    },
-    {
-        title: 'Gender',
-        dataIndex: 'gender',
-        filters: [ { text: 'Male', value: 'male' }, { text: 'Female', value: 'female' } ],
-        width: '20%'
-    },
-    {
-        title: 'Email',
-        dataIndex: 'email'
-    }
+  {
+    title: 'id',
+    dataIndex: 'id',
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: true,
+    width: '20%'
+  },
+  {
+    title: 'Title',
+    dataIndex: 'title',
+    filters: [
+      { text: 'Male', value: 'male' },
+      { text: 'Female', value: 'female' }
+    ],
+    width: '20%'
+  },
 ];
 
-@putStateInUrl('table', { fetch: [ 'pagination', 'filters', 'sorter' ] })
+@putStateInUrl('table', { fetch: ['pagination', 'filters', 'sorter'] })
 export class UrlStateExample extends Component {
-    state = {
-        data: [],
-        pagination: {
-            current: 1,
-            total: 0,
-            pageSize: 10
-        },
-        filters: {},
-        sorter: {},
-        loading: false
+  state = {
+    data: [],
+    pagination: {
+      current: 1,
+      total: 0,
+      pageSize: 10
+    },
+    filters: {},
+    sorter: {},
+    loading: false
+  };
+
+  componentDidMount() {
+    console.log('componentDidMount: emit when query string change');
+  }
+
+  @changeUrl({
+    namespace: 'table',
+    filters: ['pagination', 'filters', 'sorter']
+  })
+  handleTableChange(pagination, filters, sorter) {
+    this.state = {
+      ...this.state,
+      pagination,
+      filters,
+      sorter
     };
+    // this.fetch();
+    // 这里不可以在放fetch, 否则会发两次请求
+  }
 
-    componentDidMount() {
-        console.log('componentDidMount: emit when query string change');
-        // this.fetch();
-    }
+  async fetch(params: any) {
+    const { pagination, sorter } = params;
 
-    @changeUrl({
-        namespace: 'table',
-        filters: [ 'pagination', 'filters', 'sorter' ]
-    })
-    handleTableChange(pagination, filters, sorter) {
-        this.state = {
-            ...this.state,
-            pagination,
-            filters,
-            sorter
-        };
-        // this.fetch();
-        // 这里不可以在放fetch, 否则会发两次请求
-    }
+    const { current: page, pageSize: size } = pagination;
 
-    fetch(cb: any) {
-        console.log(cb);
-        // const { pagination, sorter } = this.state;
-        // const params = {
-        //     results: pagination.pageSize,
-        //     page: pagination.current,
-        //     sortField: (sorter as any).field,
-        //     sortOrder: (sorter as any).order
-        // };
+    const res = await API.fetchFakeData({ page, size });
 
-        // console.log('params:', params);
-        // this.setState({ loading: true });
-        // axios({
-        //     url: 'https://randomuser.me/api',
-        //     method: 'get',
-        //     params: {
-        //         results: 10,
-        //         ...params
-        //     }
-        // }).then((res) => {
-        //     const pagination = { ...this.state.pagination };
-        //     // Read total count from server
-        //     // pagination.total = data.totalCount;
-        //     pagination.total = 200;
-        //     this.setState({
-        //         loading: false,
-        //         data: (res.data as any).results,
-        //         pagination
-        //     });
-        // });
-    }
+    this.setState({
+      loading: false,
+      data: (res as any).data,
+      pagination: {
+        ...this.state.pagination,
+        total: +(res as any).totalSize
+      }
+    });
+  }
 
-    render() {
-        return (
-            <PageLayout ifBackShow={true}>
-                <PageTitle>这是一个标题</PageTitle>
-                <PageContent>
-                    <Table
-                        columns={columns}
-                        rowKey={(record) => record.login.uuid}
-                        dataSource={this.state.data}
-                        pagination={this.state.pagination}
-                        loading={this.state.loading}
-                        onChange={this.handleTableChange.bind(this)}
-                    />
-                </PageContent>
-            </PageLayout>
-        );
-    }
+  render() {
+    return (
+      <PageLayout ifBackShow={true}>
+        <PageTitle>这是一个标题</PageTitle>
+        <PageContent>
+          <Table
+            columns={columns}
+            rowKey={record => record.id}
+            dataSource={this.state.data}
+            pagination={this.state.pagination}
+            loading={this.state.loading}
+            onChange={this.handleTableChange.bind(this)}
+          />
+        </PageContent>
+      </PageLayout>
+    );
+  }
 }
