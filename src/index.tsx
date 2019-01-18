@@ -1,3 +1,6 @@
+import '@babel/polyfill';
+import 'core-js/web'
+
 import React from 'react';
 import './index.css';
 import App from './App';
