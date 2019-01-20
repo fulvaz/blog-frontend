@@ -520,3 +520,9 @@ tslint会提示你说fixed类型不匹配.
 ### 我需要用webpack-bundle-analyzer分析打包结果
 
 运行`npm run stat`
+
+### 关于polyfill
+
+create-react-app提供了babel自带的polyfill(即`@bable/polyfill`), 然而这个polyfill依赖的`core-js`版本比较旧, 像是URLSearchParam还是要自己去找polyfill的.
+
+一般是IE会出问题.
