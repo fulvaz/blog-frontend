@@ -1,5 +1,7 @@
 import '@babel/polyfill';
-import 'core-js/web'
+import 'url-search-params-polyfill';
+import 'raf/polyfill';
+
 
 import React from 'react';
 import './index.css';
