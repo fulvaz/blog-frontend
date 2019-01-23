@@ -5,9 +5,9 @@ export class DvaSynchronizer implements ISynchronizer {
     constructor(private config: UrlStateConfig) {}
 
     restoreUI(componentInstance: any, data: any): Promise<void> {
-        const { dvaNamespace, dvaFilterEvent } = this.config;
+        const { dvaFilterEvent } = this.config;
         componentInstance.props.dispatch({
-            type: `${dvaNamespace}/${dvaFilterEvent}`,
+            type: `${dvaFilterEvent}`,
             payload: data,
         });
         return Promise.resolve();
@@ -17,9 +17,9 @@ export class DvaSynchronizer implements ISynchronizer {
         componentInstance.props.history.push(`${paramsString}`);
     }
     restoreState(componentInstance, data: any) {
-        const { dvaNamespace, dvaFilterEvent } = this.config;
+        const { dvaFilterEvent } = this.config;
         componentInstance.props.dispatch({
-            type: `${dvaNamespace}/${dvaFilterEvent}`,
+            type: `${dvaFilterEvent}`,
             payload: data,
         });
     }

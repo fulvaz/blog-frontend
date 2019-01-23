@@ -8,11 +8,10 @@ import { DvaUrlState } from './dvaUrlState';
 export interface UrlStateConfig {
     ifDva?: boolean;
     dvaFilterEvent?: string; // 用于更新filter的事件
-    dvaNamespace?: string;
     ifAngular?: boolean;
     serializer?: { stringify: (data) => any; parse: (param) => any }; // TODO: 其他的序列化方式
-    apiConfig: { api: string; deps: string[] }[];
-    methodChange: string[];
+    apiConfig?: { api: string; deps: string[] }[];
+    methodChange?: string[];
     ifStringifyObj?: boolean;
 }
 

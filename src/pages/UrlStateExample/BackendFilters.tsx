@@ -4,7 +4,7 @@ import { PageTitle } from '../../components/PageLayout/PageTitle';
 import { PageContent } from '../../components/PageLayout/PageContent';
 import { Table } from 'antd';
 import { API } from '../../utils/api';
-import { urlState } from '../../utils/urlState/decorator';
+import { urlState, changeUrl, fetchApi } from '../../utils/urlState/decorator';
 
 @urlState(
     data => {
@@ -39,11 +39,10 @@ import { urlState } from '../../utils/urlState/decorator';
         };
     },
     {
-      apiConfig: [
-        // api是这个类里面负责请求api的方法名, deps是这些api依赖的筛选字段名, 字段名指你自行指定的, 在url上的key
-        {api: 'fetch', deps: ['current', 'pageSize', 'name', 'columnKey', 'order']}
-      ],
-      methodChange: ['handleTableChange']
+    //   apiConfig: [
+    //     // api是这个类里面负责请求api的方法名, deps是这些api依赖的筛选字段名, 字段名指你自行指定的, 在url上的key
+    //     {api: 'fetch', deps: ['current', 'pageSize', 'name', 'columnKey', 'order']}
+    //   ],
     },
 )
 export class BackendFilters extends Component {
@@ -103,6 +102,7 @@ export class BackendFilters extends Component {
         this.fetch();
     }
 
+    @changeUrl()
     handleTableChange(pagination, filters, sorter) {
         this.state = {
             ...this.state,
@@ -118,6 +118,7 @@ export class BackendFilters extends Component {
         // 这里不可以在放fetch, 否则会发两次请求
     }
 
+    @fetchApi({deps: ['current', 'pageSize', 'name', 'columnKey', 'order']})
     async fetch() {
         const { pagination, sorter, filters } = this.state;
 

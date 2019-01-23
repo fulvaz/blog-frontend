@@ -4,7 +4,7 @@ import { PageTitle } from '../../components/PageLayout/PageTitle';
 import { PageContent } from '../../components/PageLayout/PageContent';
 import { Table } from 'antd';
 import { API } from '../../utils/api';
-import { urlState } from '../../utils/urlState/decorator';
+import { urlState, changeUrl, fetchApi } from '../../utils/urlState/decorator';
 import { connect } from 'dva';
 import { PageComponent } from '../../utils/type';
 
@@ -51,16 +51,7 @@ import { PageComponent } from '../../utils/type';
     },
     {
         ifDva: true,
-        dvaFilterEvent: 'updateFilters',
-        dvaNamespace: 'dva',
-        apiConfig: [
-            // api是这个类里面负责请求api的方法名, deps是这些api依赖的筛选字段名, 字段名指你自行指定的, 在url上的key
-            {
-                api: 'fetch',
-                deps: ['current', 'pageSize', 'name', 'columnKey', 'order'],
-            },
-        ],
-        methodChange: ['handleTableChange'],
+        dvaFilterEvent: 'dva/updateFilters',
     }
 )
 export class Dva extends Component<
@@ -119,6 +110,7 @@ export class Dva extends Component<
         this.fetch();
     }
 
+    @changeUrl()
     handleTableChange(pagination, filters, sorter) {
         const { current, pageSize } = pagination;
         const { name } = filters;
@@ -138,6 +130,7 @@ export class Dva extends Component<
         // 不调用fetch
     }
 
+    @fetchApi({deps: ['current', 'pageSize', 'name', 'columnKey', 'order']})
     async fetch() {
         this.props.dispatch({ type: 'dva/fetchList' });
     }
