@@ -12,7 +12,8 @@ export class CommonUrlState implements IUrlState {
         private serializer: ISerializer,
         private synchronizer: ISynchronizer,
         private config: UrlStateConfig
-    ) {}
+    ) {
+    }
 
     handleInit(componentInstance: any) {
         const {

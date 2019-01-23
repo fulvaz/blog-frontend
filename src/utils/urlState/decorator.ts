@@ -7,18 +7,14 @@ export class UrlStateDecorator {
 const changeUrlMethod = Symbol('decoratedMethod');
 const fetchApiMethod = Symbol('fetchApiMethod');
 
-// export function urlState(config: UrlStateConfig);
-export function urlState(
-    stringify: (data) => any,
-    parse: (param) => any,
-    config: UrlStateConfig
-): any {
+export function urlState(config: UrlStateConfig = {}): any {
     // 人一定要有梦想, 万一哪天实现了自动序列化呢?
     // if (typeof stringify === 'object') {
     //     // TODO: 处理只传config的情况 (不知道啥时候能做到)
     //     // tslint:disable-next-line: no-parameter-reassignment
     //     config = stringify;
     // }
+
     return function(target) {
         const componentDidMount = target.prototype.componentDidMount;
 
@@ -42,9 +38,11 @@ export function urlState(
                 }
             });
 
+        const { stringify, parse } = config;
         const urlStateHandler = UrlStateFactory.build({
             ...config,
-            serializer: { stringify, parse },
+            stringify,
+            parse,
         });
 
         target.prototype.componentDidMount = function(...args) {
@@ -77,7 +75,7 @@ export function urlState(
                 // 是否为getter或者setter
                 const descriptor = Object.getOwnPropertyDescriptor(
                     target.prototype,
-                    k,
+                    k
                 );
                 return !descriptor.set && !descriptor.get;
             })

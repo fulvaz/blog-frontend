@@ -6,45 +6,7 @@ import { Table } from 'antd';
 import { API } from '../../utils/api';
 import { urlState, changeUrl, fetchApi } from '../../utils/urlState/decorator';
 
-@urlState(
-    data => {
-        const { pagination, filters, sorter } = data;
-        const { current, pageSize } = pagination;
-        const { name } = filters;
-        const { order, columnKey } = sorter;
-        return {
-            current,
-            pageSize,
-            name: JSON.stringify(name), // 需要自行保证key和value都是字符串
-            columnKey,
-            order,
-        };
-    },
-    params => {
-        // 需要自行整理成state的数据结构
-        // params返回的全部是字符串, 需要自己转换为对应数据格式
-        const { current, pageSize, name, columnKey, order } = params;
-        return {
-            pagination: {
-                current: parseInt(current, 10),
-                pageSize: parseInt(pageSize, 10),
-            },
-            filters: {
-                name: JSON.parse(name), // 也需要自行翻序列化
-            },
-            sorter: {
-                columnKey,
-                order,
-            },
-        };
-    },
-    {
-    //   apiConfig: [
-    //     // api是这个类里面负责请求api的方法名, deps是这些api依赖的筛选字段名, 字段名指你自行指定的, 在url上的key
-    //     {api: 'fetch', deps: ['current', 'pageSize', 'name', 'columnKey', 'order']}
-    //   ],
-    },
-)
+@urlState()
 export class BackendFilters extends Component {
     state = {
         data: [],

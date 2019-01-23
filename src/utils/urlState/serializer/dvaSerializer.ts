@@ -2,7 +2,7 @@ import { ISerializer } from './serializer.interface';
 import { UrlStateConfig } from '../urlStateFactory';
 import { Tools } from '../../tools';
 
-export class CustomSerilizer implements ISerializer {
+export class DvaSerilizer implements ISerializer {
     constructor(
         private stringify: (data) => any,
         private parse: (data) => any,
@@ -10,16 +10,13 @@ export class CustomSerilizer implements ISerializer {
     ) {
         if (!this.stringify) {
             this.stringify = data => {
-                const { pagination, filters, sorter } = data;
-                const { current, pageSize } = pagination;
-                const { name } = filters;
-                const { order, columnKey } = sorter;
+                const { current, pageSize, columnKey, order, name } = data;
                 return {
                     current,
                     pageSize,
-                    name: JSON.stringify(name), // 需要自行保证key和value都是字符串
                     columnKey,
                     order,
+                    name: JSON.stringify(name),
                 };
             };
         }
@@ -27,19 +24,13 @@ export class CustomSerilizer implements ISerializer {
             this.parse = params => {
                 // 需要自行整理成state的数据结构
                 // params返回的全部是字符串, 需要自己转换为对应数据格式
-                const { current, pageSize, name, columnKey, order } = params;
+                const { current, pageSize, columnKey, order, name } = params;
                 return {
-                    pagination: {
-                        current: parseInt(current, 10),
-                        pageSize: parseInt(pageSize, 10),
-                    },
-                    filters: {
-                        name: JSON.parse(name), // 也需要自行翻序列化
-                    },
-                    sorter: {
-                        columnKey,
-                        order,
-                    },
+                    current: parseInt(current, 10),
+                    pageSize: parseInt(pageSize, 10),
+                    columnKey,
+                    order,
+                    name: JSON.parse(name),
                 };
             };
         }

@@ -25,35 +25,10 @@ import { PageComponent } from '../../utils/type';
         total,
     };
 })
-@urlState(
-    // 这里的data是this.props.filters
-    data => {
-        const { current, pageSize, columnKey, order, name } = data;
-        return {
-            current,
-            pageSize,
-            columnKey,
-            order,
-            name: JSON.stringify(name),
-        };
-    },
-    params => {
-        // 需要自行整理成state的数据结构
-        // params返回的全部是字符串, 需要自己转换为对应数据格式
-        const { current, pageSize, columnKey, order, name } = params;
-        return {
-            current: parseInt(current, 10),
-            pageSize: parseInt(pageSize, 10),
-            columnKey,
-            order,
-            name: JSON.parse(name),
-        };
-    },
-    {
-        ifDva: true,
-        dvaFilterEvent: 'dva/updateFilters',
-    }
-)
+@urlState({
+    ifDva: true,
+    dvaFilterEvent: 'dva/updateFilters',
+})
 export class Dva extends Component<
     PageComponent<{
         filters: {
@@ -130,7 +105,7 @@ export class Dva extends Component<
         // 不调用fetch
     }
 
-    @fetchApi({deps: ['current', 'pageSize', 'name', 'columnKey', 'order']})
+    @fetchApi({ deps: ['current', 'pageSize', 'name', 'columnKey', 'order'] })
     async fetch() {
         this.props.dispatch({ type: 'dva/fetchList' });
     }
@@ -153,7 +128,7 @@ export class Dva extends Component<
 
         return (
             <PageLayout ifBackShow={true}>
-                <PageTitle>后端筛选</PageTitle>
+                <PageTitle>Dva筛选</PageTitle>
                 <PageContent>
                     <Table
                         columns={this.column}
