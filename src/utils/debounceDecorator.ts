@@ -1,7 +1,7 @@
 export function debounce(delay) {
     const debounceInner = (func, t) => {
         let inDebounce;
-        return function () {
+        return function() {
             const context = this;
             const args = arguments;
             clearTimeout(inDebounce);
@@ -9,9 +9,12 @@ export function debounce(delay) {
         };
     };
 
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    return function(
+        target: any,
+        propertyKey: string,
+        descriptor: PropertyDescriptor
+    ) {
         // target是prototype
         descriptor.value = debounceInner(descriptor.value, delay);
     };
 }
-

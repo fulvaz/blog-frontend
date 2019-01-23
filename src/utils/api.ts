@@ -38,24 +38,61 @@ export class API {
       {
         key: 'urlState',
         id: 4,
-        pid: 1,
+        pid: 0,
         name: 'url state',
         description: 'url state',
         platform: 'OP',
         platformName: null
-      }
+      },
+      {
+        key: 'urlStateBackendFilters',
+        id: 5,
+        pid: 4,
+        name: 'BackendFilters',
+        description: 'url state',
+        platform: 'OP',
+        platformName: null
+      },
+      {
+        key: 'urlStateCustomCols',
+        id: 6,
+        pid: 4,
+        name: 'CustomCols',
+        description: 'url state',
+        platform: 'OP',
+        platformName: null
+      },
+      {
+        key: 'urlStateFrontendFilters',
+        id: 7,
+        pid: 4,
+        name: 'FrontendFilters',
+        description: 'url state',
+        platform: 'OP',
+        platformName: null
+      },
+      {
+        key: 'withDva',
+        id: 8,
+        pid: 4,
+        name: 'With Dva',
+        description: 'url state',
+        platform: 'OP',
+        platformName: null
+      },
     ]);
   }
 
   public static fetchFakeData(params, option?) {
     const { page, size } = params;
-    console.log(size);
+    console.log('fetching fake data params:');
+    console.log(params);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         let arr = new Array(+size);
         arr = arr
           .fill(0)
-          .map((e, idx) => ({ id: idx, name: `${page}xxx`, title: 'xxx' }));
+          .map((e, idx) => ({ id: idx, name: `${page}${idx}xxx`, title: 'xxxxxxxxxxx'.slice(0, Math.floor(Math.random() * 10)) }));
         resolve({
           totalSize: size * 10 + 1,
           data: arr

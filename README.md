@@ -526,3 +526,9 @@ tslint会提示你说fixed类型不匹配.
 create-react-app提供了babel自带的polyfill(即`@bable/polyfill`), 然而这个polyfill依赖的`core-js`版本比较旧, 像是URLSearchParam还是要自己去找polyfill的.
 
 一般是IE会出问题.
+
+
+路由状态
+普通
+dva
+dva注意的问题, filters约定, @connect与@urlState的顺序问题, 
