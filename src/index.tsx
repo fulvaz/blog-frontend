@@ -1,3 +1,4 @@
+// polyfill here
 import '@babel/polyfill';
 import 'url-search-params-polyfill';
 import 'raf/polyfill';
