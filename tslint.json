@@ -55,7 +55,7 @@
     "no-var-requires": false,
     // 必须使用箭头函数，除非是单独的函数声明或是命名函数
     "only-arrow-functions": [
-      true,
+      false,
       "allow-declarations",
       "allow-named-functions"
     ],
@@ -187,13 +187,6 @@
     "no-submodule-imports": false,
     // switch 的 case 必须 return 或 break
     "no-switch-case-fall-through": true,
-    // 禁止将 this 赋值给其他变量，除非是解构赋值
-    "no-this-assignment": [
-      true,
-      {
-        "allow-destructuring": true
-      }
-    ],
     // 使用实例的方法时，必须 bind 到实例上
     "no-unbound-method": [
       true,

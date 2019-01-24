@@ -376,6 +376,190 @@ namespace 就是你在上面定义的 namespace 字段, filter 是这个 namespa
 
 warning: 对每一列设置宽度很可能会导致高分辨率下显示错误
 
+## 页面状态与url同步
+
+对数据展示类的页面, 我们要求表格的筛选条件还要同步至url中, 比如, 当我们选了第4页, 筛选每页显示10条, 输入了关键字"name"进行筛选, 那么url应该是类似这样的: `http://...site_path/route_path?page=4&size=10&search=name`
+
+其他需求有如下几个:
+
+- 修改筛选条件, url会同步变化
+- 修改url, 页面也会跟着变化
+- 对同一个url, 页面显示的结果应该是一样的
+- 如果url的query param为空, 那么应该要用默认条件进行搜索
+
+### 如何使用
+
+取数据和存放数据的方法有多种, 我们现在提供了数据存放在state和数据存放在dva两种情况下的页面与url状态同步工具.
+
+#### 页面数据在组件中
+
+```tsx
+@urlState()
+export class BackendFilters extends Component {
+    // 1. 定义你的状态, 我们约定如果你按照以下方式保存你的数据, 我们就可以零配置使用这个组件
+    state = {
+        data: [],
+        pagination: {
+            current: 1,
+            total: 0,
+            pageSize: 10,
+        },
+        filters: {
+            name: [],
+        },
+        sorter: {
+            columnKey: '',
+            order: '',
+        },
+        loading: false,
+    };
+
+    componentDidMount() {
+      this.fetch();
+    }
+
+    // 2. 为可能修改url的方法添加装饰器
+    @changeUrl()
+    handleTableChange(pagination, filters, sorter) {
+        this.state = {
+            ...this.state,
+            pagination,
+            filters,
+            sorter,
+        };
+        // fetch不能再调用
+        // this.fetch();
+    }
+
+    // 3. 声明这个方法会请求网络, 且deps内的值(这个值是指url保存到url上的)发生变化时, 会调用这个方法
+    @fetchApi({deps: ['current', 'pageSize', 'name', 'columnKey', 'order']})
+    async fetch() {
+        // ....
+    }
+
+    render() {
+       // ....
+    }
+}
+```
+
+#### 数据存放在dva中
+
+dva有一点特别, 我们约定你在dva的model中, 用于筛选的数据应该存放在一个名为filter的对象里面, 有一个reducer专门用于更新filter, 比如:
+
+```ts
+  export const dvaModel = {
+    namespace: 'dva',
+    state: {
+        dataSource: [],
+        total: 0,
+        filters: {
+            current: 1,
+            pageSize: 10,
+            name: [],
+            columnKey: '',
+            order: '',
+        },
+    },
+    reducers: {
+        updateList(state, { payload }) {
+            // ... update list
+        },
+        updateFilters(state, { payload }) {
+            return {
+                ...state,
+                filters: {
+                    ...state.filters,
+                    ...payload,
+                },
+            };
+        },
+    },
+    effects: {
+        *fetchList({ payload = {} }, { put, call, select }) {
+          // ... request
+        }
+    },
+};
+
+```
+
+然后对你的组件进行配置:
+
+我们默认你分发获取远程事件的操作封装到一个方法里面
+
+```tsx
+
+// 注意connect必须放在urlState的前面
+@connect(state => {
+    const { current, pageSize, name, columnKey, order } = state.dva.filters;
+
+    const { dataSource, total } = state.dva;
+
+    return {
+        filters: {
+            current,
+            pageSize,
+            columnKey,
+            order,
+            name,
+        },
+        dataSource,
+        total,
+    };
+})
+@urlState({
+    ifDva: true, // 添加是否为dva
+    dvaFilterEvent: 'dva/updateFilters', // 更新filters的事件
+})
+export class Dva extends Component<
+    PageComponent<{
+        filters: {
+            current: number;
+            pageSize: number;
+            columnKey: string;
+            order: string;
+            name: string[];
+        };
+        total: number;
+        dataSource: any[];
+    }>
+> {
+
+    componentDidMount() {
+        this.fetch();
+    }
+
+    @changeUrl()
+    handleTableChange(pagination, filters, sorter) {
+        const { current, pageSize } = pagination;
+        const { name } = filters;
+        const { columnKey, order } = sorter;
+
+        this.props.dispatch({
+            type: 'dva/updateFilters',
+            payload: {
+                current,
+                pageSize,
+                name,
+                columnKey,
+                order,
+            },
+        });
+        // 不调用fetch
+        // this.fetch()
+    }
+
+    @fetchApi({ deps: ['current', 'pageSize', 'name', 'columnKey', 'order'] })
+    async fetch() {
+        this.props.dispatch({ type: 'dva/fetchList' });
+    }
+}
+
+```
+
+
+
 ## Q&A
 
 ### 如何修改 antd 的样式变量修改?
@@ -525,4 +709,8 @@ tslint会提示你说fixed类型不匹配.
 
 create-react-app提供了babel自带的polyfill(即`@bable/polyfill`), 然而这个polyfill依赖的`core-js`版本比较旧, 像是URLSearchParam还是要自己去找polyfill的.
 
-一般是IE会出问题.
+然后在index.tsx的最上方引入你需要的polyfill
+
+ps: 一般是IE需要polyfill
+
+

@@ -3,34 +3,10 @@ import { PageLayout } from '../../components/PageLayout/PageLayout';
 import { PageTitle } from '../../components/PageLayout/PageTitle';
 import { PageContent } from '../../components/PageLayout/PageContent';
 import { Table } from 'antd';
-import axios from '../../utils/request';
-import { changeUrl, putStateInUrl } from '../../utils/urls';
 import { API } from '../../utils/api';
 
-const columns = [
-  {
-    title: 'id',
-    dataIndex: 'id',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    sorter: true,
-    width: '20%'
-  },
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    filters: [
-      { text: 'Male', value: 'male' },
-      { text: 'Female', value: 'female' }
-    ],
-    width: '20%'
-  },
-];
-
-@putStateInUrl('table', { fetch: ['pagination', 'filters', 'sorter'] })
-export class UrlStateExample extends Component {
+// @putStateInUrl('table', { fetch: ['pagination', 'filters', 'sorter'] })
+export class CustomCols extends Component {
   state = {
     data: [],
     pagination: {
@@ -38,19 +14,58 @@ export class UrlStateExample extends Component {
       total: 0,
       pageSize: 10
     },
-    filters: {},
-    sorter: {},
+    filters: {
+      name: []
+    },
+    sorter: {
+      columnKey: '',
+      order: ''
+    },
     loading: false
   };
 
-  componentDidMount() {
-    console.log('componentDidMount: emit when query string change');
+  get column() {
+    return [
+      {
+        title: 'id',
+        dataIndex: 'id',
+        sorter: (a, b) => a.id - b.id,
+        sortDirections: ['descend', 'ascend'],
+        sortOrder:
+          this.state.sorter.columnKey === 'id' &&
+          (this.state.sorter.order as any)
+      },
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        width: '20%',
+        filters: [{ text: '含有0', value: '0' }, { text: '含有1', value: '1' }],
+        filteredValue: this.state.filters.name,
+        onFilter: (value, record) => record.name.includes(value)
+      },
+      {
+        title: 'Title',
+        dataIndex: 'title',
+        width: '20%',
+        sorter: (a, b) => a.title.length - b.title.length,
+        sortDirections: ['descend', 'ascend'],
+        sortOrder:
+          this.state.sorter.columnKey === 'title' &&
+          (this.state.sorter.order as any)
+      }
+    ];
   }
 
-  @changeUrl({
-    namespace: 'table',
-    filters: ['pagination', 'filters', 'sorter']
-  })
+  componentDidMount() {
+    console.log('componentDidMount: emit when query string change');
+    const { pagination, sorter } = this.state;
+    this.fetch({ pagination, sorter });
+  }
+
+  // @changeUrl({
+  //   namespace: 'table',
+  //   filters: ['pagination', 'filters', 'sorter']
+  // })
   handleTableChange(pagination, filters, sorter) {
     this.state = {
       ...this.state,
@@ -58,7 +73,10 @@ export class UrlStateExample extends Component {
       filters,
       sorter
     };
-    console.log(this.state)
+    
+    this.setState({
+      ...this.state,
+    });
     // this.fetch();
     // 这里不可以在放fetch, 否则会发两次请求
   }
@@ -83,10 +101,10 @@ export class UrlStateExample extends Component {
   render() {
     return (
       <PageLayout ifBackShow={true}>
-        <PageTitle>这是一个标题</PageTitle>
+        <PageTitle>带自定义列</PageTitle>
         <PageContent>
           <Table
-            columns={columns}
+            columns={this.column}
             rowKey={record => record.id}
             dataSource={this.state.data}
             pagination={this.state.pagination}
