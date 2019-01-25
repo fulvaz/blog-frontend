@@ -558,7 +558,91 @@ export class Dva extends Component<
 
 ```
 
+按照约定的数据结构, urlState会帮你自动保存  current,pageSize,name,columnKey,order, 这几个字段的值
 
+### 自定义序列化
+
+有时候你会用到其他的筛选器, 比如一个搜索输入框
+
+```ts
+@urlState({
+    stringify: (data) => {
+        const {
+            search,
+        } = data;
+        return {
+            // 表示url中用searchInParam表示this.state.search
+            // 如this.state.search为'abc', 则改变筛选条件后, url会变成: path?searchInParam=abc
+            searchInParam: search,
+        };
+    },
+    parse: (param) => {
+        const {searchInParam} = param;
+        return {
+            // 获取url中的searchInParam字段, 然后还原给search
+            search: searchInParam,
+        }
+    }
+})
+export class CustomFilter extends Component {
+    state = {
+        search: '',
+    };
+
+    @changeUrl()
+    onChange(e) {
+        const {value: search} = e.target;
+        this.setState({search});
+    }
+
+    @fetchApi({deps: ['search']})
+    fetch() {
+        console.log('fetching data');
+    }
+
+    render() {
+        return (
+            <PageLayout ifBackShow={true}>
+                <PageTitle>后端筛选</PageTitle>
+                <PageContent>
+                    <input type="text" value={this.state.search} onChange={this.onChange.bind(this)}/>
+                    <span>your input: {this.state.search}</span>
+                </PageContent>
+            </PageLayout>
+        );
+    }
+}
+
+```
+
+ps: 由于任何数据转换为url的querySring都会被转换为字符串, 所以在反序列化的时候, 你需要将数据转换为你需要的类型, 比如数字
+ps2: 对象是不可以被正确表示的, 所以你需要自行对引用类型进行序列化与反序列化处理.
+ps3: 即使你使用了自定义序列化, current,pageSize,name,columnKey,order还是会被自动添加到url中, 但是你可以在你的自定义序列化方法中覆盖他们
+
+### urlState是如何设计的
+
+ps: 这里需要你对面向对象有简单的了解, 并且理解多态是什么, 为什么需要使用接口, 了解常用设计模式
+
+urlState的诉求有两个, 同步url与页面筛选状态, 同步的url不能太丑, 比如一串用encodeUrlComponent转义的JSON串是不可接受的
+
+实际实现的话我们需要:
+
+1. 序列化工具, 帮我们将状态转换为字符串存到url, url的字符串还原为状态.
+2. 同步器, 帮我们将需要的数据传给序列化工具, 将序列化的结果还原到组件中. 需要这个实体的原因是, 我们保存数据和取数据的方式是多样的, 如状态放component, 也能吧状态放在dva, 甚至是以后我们使用更合适的状态管理工具
+3. 一个胶水类, 负责协调序列化工具和同步器工作.
+4. 实例工厂, 根据配置选择合适的序列化工具与同步器, 生成需要的胶水类
+
+可以看到是我们这种设计虽然兼顾了约定和配置, 但还是面对页面中有大量筛选器的情况还是无能为力的.
+
+最理想的情况应该是有一套全自动序列化的工具, 帮我们将制定的筛选器字段添加到urk中, 并且自动反序列化还原组件状态.
+
+如果我们需要实现这个, 则实现序列化工具的接口`ISerializer`即可, 然后在工厂类添加配置, 生成一个胶水类, 同步器和胶水类还是能够复用的.
+
+这个过程只有工厂被修改, 基本满足开放封闭原则. 
+
+(ps: 如果你对工厂进行一下简单的修改就能实现纯配置生成类, 完全满足开放封闭原则)
+
+这真的是很基础的面向对象设计了. 如果不使用的话, 你以后扩展就要在urlState里面根据新的配置项满世界改代码, 还有无穷多的if和for循环, 如此考虑下, 增加一点心理负担去理解这个架构还是值得的.
 
 ## Q&A
 

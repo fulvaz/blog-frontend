@@ -21,13 +21,13 @@ export const renderData = {
         icon: '',
         name: '',
     },
-    urlStateBackendFilters: {
+    urlStateCommonFilters: {
         path: '/url-state/',
         icon: '',
         name: '',
     },
     urlStateCustomCols: {
-        path: '/url-state/custom-cols',
+        path: '/url-state/custom-filters',
         icon: '',
         name: '',
     },

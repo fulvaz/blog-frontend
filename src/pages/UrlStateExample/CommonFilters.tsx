@@ -7,7 +7,7 @@ import { API } from '../../utils/api';
 import { urlState, changeUrl, fetchApi } from '../../utils/urlState/decorator';
 
 @urlState()
-export class BackendFilters extends Component {
+export class CommonFilters extends Component {
     state = {
         data: [],
         pagination: {

@@ -45,7 +45,7 @@ export class API {
         platformName: null
       },
       {
-        key: 'urlStateBackendFilters',
+        key: 'urlStateCommonFilters',
         id: 5,
         pid: 4,
         name: 'BackendFilters',
