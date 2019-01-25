@@ -91,6 +91,7 @@ TODO: 样式部分文档需要润色
 
 ### 项目结构规范与说明
 
+```text
 src
 ├── app.module.less
 ├── app.tsx --- 路由与全局配置文件
@@ -136,6 +137,7 @@ src
 ├── request.ts
 ├── tools.ts
 └── url-state.ts
+```
 
 说明:
 
