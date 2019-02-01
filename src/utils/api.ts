@@ -5,99 +5,15 @@ import { environment } from '../enviroments';
 const API_PREFIX = environment.apiPrefix;
 
 export class API {
-  public static fetchMenu(params?, option?) {
-    console.warn('requesting fake menu data');
-    return Promise.resolve([
-      {
-        key: 'example',
-        id: 1,
-        pid: 0,
-        name: 'Example',
-        description: 'Example',
-        platform: 'OP',
-        platformName: null
-      },
-      {
-        key: 'form',
-        id: 2,
-        pid: 1,
-        name: 'Form',
-        description: 'Form',
-        platform: 'OP',
-        platformName: null
-      },
-      {
-        id: 3,
-        pid: 1,
-        name: 'Table',
-        key: 'table',
-        description: 'Table',
-        platform: 'OP',
-        platformName: null
-      },
-      {
-        key: 'urlState',
-        id: 4,
-        pid: 0,
-        name: 'url state',
-        description: 'url state',
-        platform: 'OP',
-        platformName: null
-      },
-      {
-        key: 'urlStateCommonFilters',
-        id: 5,
-        pid: 4,
-        name: 'BackendFilters',
-        description: 'url state',
-        platform: 'OP',
-        platformName: null
-      },
-      {
-        key: 'urlStateCustomCols',
-        id: 6,
-        pid: 4,
-        name: 'CustomCols',
-        description: 'url state',
-        platform: 'OP',
-        platformName: null
-      },
-      {
-        key: 'urlStateFrontendFilters',
-        id: 7,
-        pid: 4,
-        name: 'FrontendFilters',
-        description: 'url state',
-        platform: 'OP',
-        platformName: null
-      },
-      {
-        key: 'withDva',
-        id: 8,
-        pid: 4,
-        name: 'With Dva',
-        description: 'url state',
-        platform: 'OP',
-        platformName: null
-      },
-    ]);
-  }
-
-  public static fetchFakeData(params, option?) {
-    const { page, size } = params;
-    console.log('fetching fake data params:');
-    console.log(params);
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        let arr = new Array(+size);
-        arr = arr
-          .fill(0)
-          .map((e, idx) => ({ id: idx, name: `${page}${idx}xxx`, title: 'xxxxxxxxxxx'.slice(0, Math.floor(Math.random() * 10)) }));
-        resolve({
-          totalSize: size * 10 + 1,
-          data: arr
+    public static fetchArticles(params?, option?): Promise<any> {
+        return request.get(`${API_PREFIX}/articles`, { ...option, params });
+    }
+    public static fetchArticle(params?, option?) {
+        const { id } = params;
+        delete params.id;
+        return request.get(`${API_PREFIX}/article/${id}`, {
+            ...option,
+            params,
         });
-      }, 100);
-    });
-  }
+    }
 }

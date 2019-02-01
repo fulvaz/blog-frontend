@@ -1,19 +1,19 @@
- const enviroments = {
-  production: {
-    apiPrefix: '',
-    login: 'http://auth.ad.jpushoa.com/auth',
-    logout: 'http://auth.ad.jpushoa.com/auth/logout',
-  },
-  dev: {
-    apiPrefix: 'http://nj-ssp.jpushoa.com/iportal-gw2/ad-pkg-distribution-portal',
-    login: 'http://dev-test.jpushoa.com/ad/auth',
-    logout: 'http://dev-test.jpushoa.com/ad/auth/logout',
-  },
-  local: {
-    apiPrefix: 'http://nj-ssp.jpushoa.com/iportal-gw2/ad-pkg-distribution-portal',
-    login: 'http://dev-test.jpushoa.com/ad/auth',
-    logout: 'http://dev-test.jpushoa.com/ad/auth/logout',
-  }
+const enviroments = {
+    production: {
+        apiPrefix: '',
+        login: '/login',
+        logout: '/logout',
+    },
+    dev: {
+        apiPrefix: '',
+        login: '/login',
+        logout: '/logout',
+    },
+    local: {
+        apiPrefix: '/blog',
+        login: '/login',
+        logout: '/logout',
+    },
 };
 
 console.log(process.env.REACT_APP_ENV);

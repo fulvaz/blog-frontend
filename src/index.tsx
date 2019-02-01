@@ -5,30 +5,15 @@ import 'raf/polyfill';
 
 
 import React from 'react';
-import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import dva from 'dva';
-import createLoading from 'dva-loading';
-import { Global } from './models/globalModel';
-import { Sidebar } from './models/sidebarModel';
-import { IFrame } from './models/iFrameModel';
 
 
 const app = dva();
 
-app.use(createLoading({ effects: true }));
 
-app.model(Global);
-app.model(Sidebar);
-app.model(IFrame);
-
-// ReactDOM.render(
-//   <HashRouter>
-//     <App />
-//   </HashRouter>,
-//   document.getElementById("root")
-// );
+// app.model(Global);
 
 window['__DVA_INSTANCE'] = app;
 

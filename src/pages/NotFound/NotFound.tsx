@@ -1,12 +1,7 @@
-import React, { Component } from "react";
-import { PageLayout } from "../../components/PageLayout/PageLayout";
-import { PageTitle } from "../../components/PageLayout/PageTitle";
-import { PageContent } from "../../components/PageLayout/PageContent";
+import React, { Component } from 'react';
 
 export class NotFound extends Component {
-  render() {
-    return (
-      <span>404</span>
-    );
-  }
+    render() {
+        return <span>404</span>;
+    }
 }
