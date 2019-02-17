@@ -19,7 +19,7 @@ deploy:
   provider: script
   skip_cleanup: true
   script: chmod 600 deploy_key && ssh -p $SERVER_PORT -o StrictHostKeyChecking=no
-    -i ./deploy_key $SERVER_USERNAME@$SERVER './frontend/deploy-front.sh'
+    -i ./deploy_key $SERVER_USERNAME@$SERVER './frontend/deploy.sh'
   on:
     branch: master
 cache: yarn
