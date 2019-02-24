@@ -1,6 +1,6 @@
 const enviroments = {
     production: {
-        apiPrefix: '',
+        apiPrefix: 'http://api.fulvaz.com/blog',
         login: '/login',
         logout: '/logout',
     },
@@ -16,6 +16,6 @@ const enviroments = {
     },
 };
 
-console.log(process.env.REACT_APP_ENV);
+console.log(process.env);
 
 export const environment = enviroments[process.env.REACT_APP_ENV];
