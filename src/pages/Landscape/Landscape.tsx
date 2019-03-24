@@ -1,5 +1,5 @@
 import React from 'react';
-import poster from '../../assets/background.png';
+import poster from '../../assets/background.jpg';
 import style from './landscape.module.less';
 
 export class Landscape extends React.Component {

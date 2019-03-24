@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NotFound } from './pages/NotFound/NotFound';
 import { PageComponent } from './utils/type';
-import { Switch, Route } from 'dva/router';
+import { Switch, Route } from 'react-router-dom';
 import { ArticleList } from './pages/ArticleList/ArticleList';
 import { Article } from './pages/Article/Article';
 

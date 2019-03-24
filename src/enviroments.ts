@@ -5,7 +5,7 @@ const enviroments = {
         logout: '/logout',
     },
     dev: {
-        apiPrefix: '',
+        apiPrefix: 'http://localhost:5000',
         login: '/login',
         logout: '/logout',
     },

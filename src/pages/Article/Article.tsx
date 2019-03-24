@@ -1,10 +1,11 @@
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { RouteComponentProps } from 'react-router-dom';
-import * as style from './Article.module.less';
+import style from './Article.module.less';
 import { API } from '../../utils/api';
 import { loading } from '../../utils/loadingDecorator';
 import { Spin } from 'antd';
+import classNames from 'classnames';
 
 interface IURLParam {
     id: string;
@@ -54,7 +55,7 @@ export class Article extends React.Component<RouteComponentProps<IURLParam>> {
         const res = await API.fetchArticle({ id });
         this.setState({
             article: res.data,
-    });
+        });
     }
 
     public render() {
@@ -63,10 +64,17 @@ export class Article extends React.Component<RouteComponentProps<IURLParam>> {
         return (
             <div className={style.container}>
                 <Spin spinning={ifLoading}>
-                    <h2>
+                    <h2 className={style['article-head']}>
                         <span>{article.title}</span>
                     </h2>
-                    <ReactMarkdown source={article.content} />
+                    <div
+                        className={classNames(
+                            'color-black',
+                            style['content-container']
+                        )}
+                    >
+                        <ReactMarkdown source={article.content} />
+                    </div>
                 </Spin>
             </div>
         );

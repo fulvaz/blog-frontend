@@ -1,10 +1,11 @@
 import classNames from 'classnames';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Link } from 'dva/router';
 import { API } from '../../utils/api';
 import { Spin } from 'antd';
 import { loading } from '../../utils/loadingDecorator';
+import style from './ArticleList.module.less';
+import { Link } from 'react-router-dom';
 
 export class ArticleList extends React.Component {
     public props: {
@@ -19,11 +20,9 @@ export class ArticleList extends React.Component {
     public state = {
         ifLoading: false,
         articles: [],
-        pagination: {
-            current: 1,
-            pageSize: 10,
-            total: 0,
-        },
+        current: 1,
+        pageSize: 10,
+        total: 0,
     };
 
     async componentDidMount() {
@@ -33,12 +32,12 @@ export class ArticleList extends React.Component {
     @loading()
     async fetchList() {
         this.setState({ ifLoading: true });
-        const {current, pageSize} = this.state.pagination;
+        const { current, pageSize } = this.state;
         const res = await API.fetchArticles({
             page: current,
             size: pageSize,
         });
-        const {total} = res;
+        const { total } = res;
         this.setState({
             articles: res.data,
             ifLoading: false,
@@ -48,8 +47,8 @@ export class ArticleList extends React.Component {
 
     async onListChange(pagination) {
         const { current, pageSize } = pagination;
-        this.state.pagination = {
-            ...this.state.pagination,
+        this.state = {
+            ...this.state,
             current,
             pageSize,
         };
@@ -58,31 +57,58 @@ export class ArticleList extends React.Component {
 
     public render() {
         const { ifLoading, articles } = this.state;
-        const { current, pageSize, total } = this.state.pagination;
-        
-        const ifPaginationShow = total < current * pageSize;
-        const pagination = ifPaginationShow ? (<div className="flex flex-jcc" onClick={() => {
-            this.onListChange({pageSize, current: current + 1});
-        }}><span className="cp">下一页</span></div>) : '';
+        const { current, pageSize, total } = this.state;
 
-        const articlesTpl = articles.length !== 0 ? articles.map(e => {
-            const { title, content, id } = e;
-            const abstract = content.slice(0, 300);
-            return (
-                <Link to={`/article/${id}`} key={id}>
-                    <div key={id}>
-                        <h2 className={classNames('color-black')}>
-                            {title}
-                        </h2>
-                        <div className={classNames('color-black')}>
-                            <ReactMarkdown source={abstract} />
-                        </div>
-                    </div>
-                </Link>
+        const ifPaginationShow = total > current * pageSize;
+        const pagination = ifPaginationShow ? (
+            <div
+                className="flex flex-jcc"
+                onClick={() => {
+                    this.onListChange({ pageSize, current: current + 1 });
+                }}
+            >
+                <span className="cp">下一页</span>
+            </div>
+        ) : (
+            ''
+        );
+
+        const articlesTpl =
+            articles.length !== 0 ? (
+                articles.map(e => {
+                    const { title, content } = e;
+                    const abstract = content.slice(0, 300) + '\n\n' + '......';
+                    return (
+                        <Link to={`/article/${title}`} key={title}>
+                            <div
+                                key={title}
+                                className={style['article-container']}
+                            >
+                                <h2
+                                    className={classNames(
+                                        'color-black',
+                                        style['article-head']
+                                    )}
+                                >
+                                    {title}
+                                </h2>
+                                <div
+                                    className={classNames(
+                                        'color-black',
+                                        style['content-container']
+                                    )}
+                                >
+                                    <ReactMarkdown source={abstract} />
+                                </div>
+                            </div>
+                        </Link>
+                    );
+                })
+            ) : (
+                <span>暂无数据</span>
             );
-        }) : <span>暂无数据</span>;
 
-    return (
+        return (
             <div>
                 <Spin spinning={ifLoading}>
                     {articlesTpl}
