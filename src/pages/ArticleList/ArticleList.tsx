@@ -38,7 +38,7 @@ export class ArticleList extends React.Component {
             page: current,
             size: pageSize,
         });
-        const {total} = res.pagination;
+        const {total} = res;
         this.setState({
             articles: res.data,
             ifLoading: false,
